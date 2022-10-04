@@ -13,21 +13,21 @@
 package org.eclipse.kapua.translator.test;
 
 import io.cucumber.junit.Cucumber;
-import io.cucumber.junit.CucumberOptions;
+//import io.cucumber.junit.CucumberOptions;
 
 import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(
-        features = { "classpath:features/TranslatorUnitTests.feature"
-        },
-        glue = {"org.eclipse.kapua.translator.test",
-                "org.eclipse.kapua.qa.common",
-                "org.eclipse.kapua.service.device.registry.steps"
-        },
-        plugin = { "pretty",
-                "html:target/cucumber",
-                "json:target/cucumber.json" },
-        monochrome = true)
+//@CucumberOptions(
+//        features = { "classpath:features/TranslatorUnitTests.feature"
+//        },
+//        glue = {"org.eclipse.kapua.translator.test",
+//                "org.eclipse.kapua.qa.common",
+//                "org.eclipse.kapua.service.device.registry.steps"
+//        },
+//        plugin = { "pretty",
+//                "html:target/cucumber",
+//                "json:target/cucumber.json" },
+//        monochrome = true)
 public class RunTranslatorUnitTest {
 }

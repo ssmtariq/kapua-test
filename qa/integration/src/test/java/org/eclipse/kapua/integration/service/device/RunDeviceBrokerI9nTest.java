@@ -16,22 +16,22 @@ package org.eclipse.kapua.integration.service.device;
 import org.junit.runner.RunWith;
 
 import io.cucumber.junit.Cucumber;
-import io.cucumber.junit.CucumberOptions;
+//import io.cucumber.junit.CucumberOptions;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(
-        features = {"classpath:features/broker/DeviceBrokerI9n.feature"},
-        glue = {"org.eclipse.kapua.qa.common",
-                "org.eclipse.kapua.qa.integration.steps",
-                "org.eclipse.kapua.service.account.steps",
-                "org.eclipse.kapua.service.user.steps",
-                "org.eclipse.kapua.service.tag.steps",
-                "org.eclipse.kapua.service.device.registry.steps"
-        },
-        plugin = {"pretty",
-                "html:target/cucumber/DeviceBrokerI9n",
-                "json:target/DeviceBrokerI9n_cucumber.json"
-        },
-        monochrome = true )
+//@CucumberOptions(
+//        features = {"classpath:features/broker/DeviceBrokerI9n.feature"},
+//        glue = {"org.eclipse.kapua.qa.common",
+//                "org.eclipse.kapua.qa.integration.steps",
+//                "org.eclipse.kapua.service.account.steps",
+//                "org.eclipse.kapua.service.user.steps",
+//                "org.eclipse.kapua.service.tag.steps",
+//                "org.eclipse.kapua.service.device.registry.steps"
+//        },
+//        plugin = {"pretty",
+//                "html:target/cucumber/DeviceBrokerI9n",
+//                "json:target/DeviceBrokerI9n_cucumber.json"
+//        },
+//        monochrome = true )
 public class RunDeviceBrokerI9nTest {}
 

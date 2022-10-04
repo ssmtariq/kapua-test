@@ -13,24 +13,24 @@
 package org.eclipse.kapua.integration.service.device.management;
 
 import io.cucumber.junit.Cucumber;
-import io.cucumber.junit.CucumberOptions;
+//import io.cucumber.junit.CucumberOptions;
 import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(
-        features = {
-                "classpath:features/deviceManagement/DeviceManagementInventoryI9n.feature",
-        },
-        glue = {
-                "org.eclipse.kapua.qa.common",
-                "org.eclipse.kapua.qa.integration.steps",
-                "org.eclipse.kapua.service.account.steps",
-                "org.eclipse.kapua.service.device.registry.steps",
-                "org.eclipse.kapua.service.user.steps",
-        },
-        plugin = {"pretty",
-                "html:target/cucumber/DeviceManagementInventoryI9n",
-                "json:target/DeviceManagementInventoryI9n_cucumber.json"},
-        monochrome = true)
+//@CucumberOptions(
+//        features = {
+//                "classpath:features/deviceManagement/DeviceManagementInventoryI9n.feature",
+//        },
+//        glue = {
+//                "org.eclipse.kapua.qa.common",
+//                "org.eclipse.kapua.qa.integration.steps",
+//                "org.eclipse.kapua.service.account.steps",
+//                "org.eclipse.kapua.service.device.registry.steps",
+//                "org.eclipse.kapua.service.user.steps",
+//        },
+//        plugin = {"pretty",
+//                "html:target/cucumber/DeviceManagementInventoryI9n",
+//                "json:target/DeviceManagementInventoryI9n_cucumber.json"},
+//        monochrome = true)
 public class RunDeviceManagementInventoryI9nTest {
 }

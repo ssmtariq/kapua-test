@@ -13,24 +13,20 @@
 package org.eclipse.kapua.service.job.test;
 
 import io.cucumber.junit.Cucumber;
-import io.cucumber.junit.CucumberOptions;
+//import io.cucumber.junit.CucumberOptions;
 import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(
-        features = {
-                "classpath:features/JobStepDefinitionService.feature",
-                "classpath:features/JobStepService.feature",
-                "classpath:features/JobService.feature"
-        },
-        glue = {"org.eclipse.kapua.service.job.test",
-                "org.eclipse.kapua.service.job.steps",
-                "org.eclipse.kapua.qa.common"
-        },
-        plugin = {"pretty",
-                "html:target/cucumber/JobService",
-                "json:target/JobService_cucumber.json"},
-        monochrome = true)
+//@CucumberOptions(
+//        features = "",
+//        glue = {"org.eclipse.kapua.service.job.test",
+//                "org.eclipse.kapua.service.job.steps",
+//                "org.eclipse.kapua.qa.common"
+//        },
+//        plugin = {"pretty",
+//                "html:target/cucumber/JobService",
+//                "json:target/JobService_cucumber.json"},
+//        monochrome = true)
 public class RunJobUnitTest {
 }
 

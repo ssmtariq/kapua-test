@@ -224,7 +224,11 @@ public class MessageStoreServiceImpl extends AbstractKapuaConfigurableService im
             throws KapuaException {
         checkDataAccess(scopeId, Actions.delete);
         try {
+            System.out.println("####################################### CALLING Intended Method ##################################################");
+            Long startTime = System.currentTimeMillis();
             messageStoreFacade.delete(scopeId, id);
+            Long endTime = System.currentTimeMillis();
+            System.out.println("Total time consumed my the method of interest is: " +(endTime-startTime));
         } catch (Exception e) {
             logException(e);
             throw new DatastoreException(KapuaErrorCodes.INTERNAL_ERROR, e, e.getMessage());

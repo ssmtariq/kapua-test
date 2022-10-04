@@ -13,24 +13,20 @@
 package org.eclipse.kapua.service.device.registry.test;
 
 import io.cucumber.junit.Cucumber;
-import io.cucumber.junit.CucumberOptions;
+//import io.cucumber.junit.CucumberOptions;
 
 import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(
-        features = { "classpath:features/DeviceRegistry.feature",
-                     "classpath:features/DeviceEvent.feature",
-                     "classpath:features/DeviceRegistryConnection.feature",
-                     "classpath:features/DeviceRegistryValidation.feature"
-                   },
-        glue = {"org.eclipse.kapua.service.device.registry.test",
-                "org.eclipse.kapua.service.device.registry.steps",
-                "org.eclipse.kapua.qa.common"
-               },
-        plugin = { "pretty",
-                   "html:target/cucumber/DeviceRegistry",
-                   "json:target/DeviceRegistry_cucumber.json" },
-        monochrome = true)
+//@CucumberOptions(
+//        features = "",
+//        glue = {"org.eclipse.kapua.service.device.registry.test",
+//                "org.eclipse.kapua.service.device.registry.steps",
+//                "org.eclipse.kapua.qa.common"
+//               },
+//        plugin = { "pretty",
+//                   "html:target/cucumber/DeviceRegistry",
+//                   "json:target/DeviceRegistry_cucumber.json" },
+//        monochrome = true)
 public class RunDeviceRegistryUnitTest {
 }

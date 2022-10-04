@@ -13,20 +13,20 @@
 package org.eclipse.kapua.integration.docker;
 
 import io.cucumber.junit.Cucumber;
-import io.cucumber.junit.CucumberOptions;
+//import io.cucumber.junit.CucumberOptions;
 
 import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(
-        features = "classpath:features/docker/broker.feature",
-        glue = {"org.eclipse.kapua.qa.common",
-                "org.eclipse.kapua.qa.integration.steps"
-        },
-        plugin = {"pretty",
-                "html:target/cucumber/DockerBroker",
-                "json:target/DockerBroker_cucumber.json"
-        },
-        monochrome = true)
+//@CucumberOptions(
+//        features = "classpath:features/docker/broker.feature",
+//        glue = {"org.eclipse.kapua.qa.common",
+//                "org.eclipse.kapua.qa.integration.steps"
+//        },
+//        plugin = {"pretty",
+//                "html:target/cucumber/DockerBroker",
+//                "json:target/DockerBroker_cucumber.json"
+//        },
+//        monochrome = true)
 public class RunDockerBrokerTest {
 }

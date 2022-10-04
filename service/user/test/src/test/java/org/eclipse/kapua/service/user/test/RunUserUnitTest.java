@@ -13,21 +13,21 @@
 package org.eclipse.kapua.service.user.test;
 
 import io.cucumber.junit.Cucumber;
-import io.cucumber.junit.CucumberOptions;
+//import io.cucumber.junit.CucumberOptions;
 
 import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(
-        features = { "classpath:features/UserService.feature"
-                   },
-        glue = {"org.eclipse.kapua.service.user.test",
-                "org.eclipse.kapua.service.user.steps",
-                "org.eclipse.kapua.qa.common"
-               },
-        plugin = { "pretty",
-                   "html:target/cucumber/UserService",
-                   "json:target/UserService_cucumber.json" },
-        monochrome = true)
+//@CucumberOptions(
+//        features = { "classpath:features/UserService.feature"
+//                   },
+//        glue = {"org.eclipse.kapua.service.user.test",
+//                "org.eclipse.kapua.service.user.steps",
+//                "org.eclipse.kapua.qa.common"
+//               },
+//        plugin = { "pretty",
+//                   "html:target/cucumber/UserService",
+//                   "json:target/UserService_cucumber.json" },
+//        monochrome = true)
 public class RunUserUnitTest {
 }

@@ -13,22 +13,22 @@
 package org.eclipse.kapua.service.tag.test;
 
 import io.cucumber.junit.Cucumber;
-import io.cucumber.junit.CucumberOptions;
+//import io.cucumber.junit.CucumberOptions;
 
 import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(
-        features = { "classpath:features/TagService.feature"
-                   },
-        glue = {"org.eclipse.kapua.service.device.registry.steps",
-                "org.eclipse.kapua.service.tag.test",
-                "org.eclipse.kapua.service.tag.steps",
-                "org.eclipse.kapua.qa.common"
-               },
-        plugin = { "pretty",
-                   "html:target/cucumber/TagService",
-                   "json:target/TagService_cucumber.json" },
-        monochrome = true)
+//@CucumberOptions(
+//        features = { "classpath:features/TagService.feature"
+//                   },
+//        glue = {"org.eclipse.kapua.service.device.registry.steps",
+//                "org.eclipse.kapua.service.tag.test",
+//                "org.eclipse.kapua.service.tag.steps",
+//                "org.eclipse.kapua.qa.common"
+//               },
+//        plugin = { "pretty",
+//                   "html:target/cucumber/TagService",
+//                   "json:target/TagService_cucumber.json" },
+//        monochrome = true)
 public class RunTagUnitTest {
 }

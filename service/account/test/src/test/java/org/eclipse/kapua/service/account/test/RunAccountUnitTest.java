@@ -13,23 +13,23 @@
 package org.eclipse.kapua.service.account.test;
 
 import io.cucumber.junit.Cucumber;
-import io.cucumber.junit.CucumberOptions;
+//import io.cucumber.junit.CucumberOptions;
 
 import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
 
-@CucumberOptions(
-        features = { "classpath:features/AccountService.feature"
-                   },
-        glue = {"org.eclipse.kapua.service.account.steps",
-                "org.eclipse.kapua.service.account.test",
-                "org.eclipse.kapua.qa.common"
-               },
-        plugin = { "pretty",
-                   "html:target/cucumber/AccountService",
-                   "json:target/AccountService_cucumber.json" },
-        monochrome = true)
+//@CucumberOptions(
+//        features = { "classpath:features/AccountService.feature"
+//                   },
+//        glue = {"org.eclipse.kapua.service.account.steps",
+//                "org.eclipse.kapua.service.account.test",
+//                "org.eclipse.kapua.qa.common"
+//               },
+//        plugin = { "pretty",
+//                   "html:target/cucumber/AccountService",
+//                   "json:target/AccountService_cucumber.json" },
+//        monochrome = true)
 
 public class RunAccountUnitTest {
 }
