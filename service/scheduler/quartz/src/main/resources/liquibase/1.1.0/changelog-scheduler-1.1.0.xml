@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright (c) 2019, 2022 Eurotech and/or its affiliates and others
+
+    This program and the accompanying materials are made
+    available under the terms of the Eclipse Public License 2.0
+    which is available at https://www.eclipse.org/legal/epl-2.0/
+
+    SPDX-License-Identifier: EPL-2.0
+
+    Contributors:
+        Eurotech - initial API and implementation
+ -->
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd"
+        logicalFilePath="KapuaDB/changelog-scheduler-1.1.0.xml">
+
+    <include relativeToChangelogFile="true" file="./scheduler-engine-quartz-update_job_launcher.xml"/>
+    <include relativeToChangelogFile="true" file="./trigger-description.xml"/>
+    <include relativeToChangelogFile="true" file="./trigger-trigger_definition_id.xml"/>
+
+    <include relativeToChangelogFile="true" file="./cron_job_trigger_definition.xml"/>
+    <include relativeToChangelogFile="true" file="./interval_job_trigger_definition.xml"/>
+    <include relativeToChangelogFile="true" file="./device_connect_trigger_definition.xml"/>
+
+</databaseChangeLog>

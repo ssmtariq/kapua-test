@@ -1,0 +1,1019 @@
+openapi: 3.0.2
+
+info:
+  title: Eclipse Kapua REST API
+  version: '1.0'
+  contact:
+    name: Eclipse Kapua Dev Team
+    url: https://eclipse.org/kapua
+    email: kapua-dev@eclipse.org
+  license:
+    name: Eclipse Public License 2.0
+    url: https://www.eclipse.org/legal/epl-2.0
+  description: |
+    # Introduction
+    Eclipse Kapua exposes a comprehensive set of Web Service APIs for application integration purposes. The Eclipse Kapua REST API allows you to build applications that use Representational State Transfer HTTP calls to retrieve, modify, or publish platform data. For example through the APIs, you are able to access all the functionality of the Console or to control a device from your application built on top of Eclipse Kapua.
+
+    The Eclipse Kapua platform conforms to standard REpresentational State Transfer (REST) protocol to expose its Application Programming Interfaces (API). REST has emerged over the past few years as a predominant Web service design model. REST-style architectures consist of clients and servers. Clients initiate requests to servers, while servers process requests and return appropriate responses. Requests and responses are built around the transfer of representations of resources. A resource can be essentially any coherent and meaningful concept that may be addressed. A representation of a resource is typically a document that captures the current or intended state of a resource.
+
+    Eclipse Kapua RESTful APIs expose the standard action types (create, read, update, delete) over the platform objects. They are capable of retrieving a resource representation in XML or JSON format. You can use the REST HTTP Accept Header to specify the representation requested using the "application/xml" and "application/json" Media Types. As an alternative to the Accept header, you can specify the requested data representation by appending an ".xml" or ".json" suffix to the path part of your request URLs.
+
+    For more details on the Eclipse Kapua REST APIs, please refer to:
+    - [The Eclipse Kapua Documentation](https://www.eclipse.org/kapua/documentation.php)
+    - [The Eclipse Kapua Code on github](https://github.com/eclipse/kapua)
+
+    # Authentication
+    All Eclipse Kapua REST API, except the Authentication endpoints that performs an Authentication, need an Authentication Token to be executed. You will retrieve such token as a response of one of the Authentication calls, in the form of a [JWT](https://jwt.io) as the value of the property `tokenId`. For every subsequent call, you need to pass such token in the `Authorization` HTTP Header, with the `Bearer` type.
+
+servers:
+  - description: Kapua REST API Endpoint
+    url: "{scheme}://{host}:{port}/{basePath}"
+    variables:
+      scheme:
+        default: https
+        enum:
+          - http
+          - https
+      host:
+        description: Host name of the Kapua REST API Endpoint
+        default: api.your-kapua-instance.com
+      port:
+        description: Port number of the Kapua REST API Endpoint
+        default: '8080'
+      basePath:
+        description: The Base path of the Kapua REST API Endpoint
+        default: v1
+  - description: Localhost Docker Compose
+    url: http://localhost:8081/v1
+
+paths:
+  ### Authentication ###
+  /authentication/user:
+    $ref: './authentication/authentication-user.yaml#/paths/~1authentication~1user'
+  /authentication/apikey:
+    $ref: './authentication/authentication-apikey.yaml#/paths/~1authentication~1apikey'
+  /authentication/refresh:
+    $ref: './authentication/authentication-refresh.yaml#/paths/~1authentication~1refresh'
+  /authentication/jwt:
+    $ref: './authentication/authentication-jwt.yaml#/paths/~1authentication~1jwt'
+  /authentication/info:
+    $ref: './authentication/authentication-info.yaml#/paths/~1authentication~1info'
+  /authentication/logout:
+    $ref: './authentication/authentication-logout.yaml#/paths/~1authentication~1logout'
+  /authentication/mfa:
+    $ref: './authentication/authentication-mfa.yaml#/paths/~1authentication~1mfa'
+  ### Access Info ###
+  /{scopeId}/accessinfos:
+    $ref: './accessInfo/accessInfo-scopeId.yaml#/paths/~1{scopeId}~1accessinfos'
+  /{scopeId}/accessinfos/{accessInfoId}:
+    $ref: './accessInfo/accessInfo-scopeId-accessInfoId.yaml#/paths/~1{scopeId}~1accessinfos~1{accessInfoId}'
+  /{scopeId}/accessinfos/_count:
+    $ref: './accessInfo/accessInfo-scopeId-_count.yaml#/paths/~1{scopeId}~1accessinfos~1_count'
+  /{scopeId}/accessinfos/_query:
+    $ref: './accessInfo/accessInfo-scopeId-_query.yaml#/paths/~1{scopeId}~1accessinfos~1_query'
+  /{scopeId}/accessinfos/{accessInfoId}/permissions:
+    $ref: './accessInfo/accessInfo-scopeId-accessInfoId-permissions.yaml#/paths/~1{scopeId}~1accessinfos~1{accessInfoId}~1permissions'
+  /{scopeId}/accessinfos/{accessInfoId}/permissions/{accessPermissionId}:
+    $ref: './accessInfo/accessInfo-scopeId-accessInfoId-permissions-accessPermissionId.yaml#/paths/~1{scopeId}~1accessinfos~1{accessInfoId}~1permissions~1{accessPermissionId}'
+  /{scopeId}/accessinfos/{accessInfoId}/permissions/_count:
+    $ref: './accessInfo/accessInfo-scopeId-accessInfoId-permissions-_count.yaml#/paths/~1{scopeId}~1accessinfos~1{accessInfoId}~1permissions~1_count'
+  /{scopeId}/accessinfos/{accessInfoId}/permissions/_query:
+    $ref: './accessInfo/accessInfo-scopeId-accessInfoId-permissions-_query.yaml#/paths/~1{scopeId}~1accessinfos~1{accessInfoId}~1permissions~1_query'
+  /{scopeId}/accessinfos/{accessInfoId}/roles:
+    $ref: './accessInfo/accessInfo-scopeId-accessInfoId-roles.yaml#/paths/~1{scopeId}~1accessinfos~1{accessInfoId}~1roles'
+  /{scopeId}/accessinfos/{accessInfoId}/roles/{accessRoleId}:
+    $ref: './accessInfo/accessInfo-scopeId-accessInfoId-roles-accessRoleId.yaml#/paths/~1{scopeId}~1accessinfos~1{accessInfoId}~1roles~1{accessRoleId}'
+  /{scopeId}/accessinfos/{accessInfoId}/roles/_count:
+    $ref: './accessInfo/accessInfo-scopeId-accessInfoId-roles-_count.yaml#/paths/~1{scopeId}~1accessinfos~1{accessInfoId}~1roles~1_count'
+  /{scopeId}/accessinfos/{accessInfoId}/roles/_query:
+    $ref: './accessInfo/accessInfo-scopeId-accessInfoId-roles-_query.yaml#/paths/~1{scopeId}~1accessinfos~1{accessInfoId}~1roles~1_query'
+  ### Account ###
+  /{scopeId}/accounts:
+    $ref: './account/account-scopeId.yaml#/paths/~1{scopeId}~1accounts'
+  /{scopeId}/accounts/{accountId}:
+    $ref: './account/account-scopeId-accountId.yaml#/paths/~1{scopeId}~1accounts~1{accountId}'
+  /{scopeId}/accounts/_count:
+    $ref: './account/account-scopeId-_count.yaml#/paths/~1{scopeId}~1accounts~1_count'
+  /{scopeId}/accounts/_query:
+    $ref: './account/account-scopeId-_query.yaml#/paths/~1{scopeId}~1accounts~1_query'
+  ### Credential ###
+  /{scopeId}/credentials:
+    $ref: './credential/credential-scopeId.yaml#/paths/~1{scopeId}~1credentials'
+  /{scopeId}/credentials/{credentialId}:
+    $ref: './credential/credential-scopeId-credentialId.yaml#/paths/~1{scopeId}~1credentials~1{credentialId}'
+  /{scopeId}/credentials/_count:
+    $ref: './credential/credential-scopeId-_count.yaml#/paths/~1{scopeId}~1credentials~1_count'
+  /{scopeId}/credentials/_query:
+    $ref: './credential/credential-scopeId-_query.yaml#/paths/~1{scopeId}~1credentials~1_query'
+  /{scopeId}/credentials/{credentialId}/unlock:
+    $ref: './credential/credential-scopeId-credentialId-unlock.yaml#/paths/~1{scopeId}~1credentials~1{credentialId}~1unlock'
+  ### Data Channel ###
+  /{scopeId}/data/channels:
+    $ref: './dataChannel/dataChannel-scopeId.yaml#/paths/~1{scopeId}~1data~1channels'
+  /{scopeId}/data/channels/_count:
+    $ref: './dataChannel/dataChannel-scopeId-_count.yaml#/paths/~1{scopeId}~1data~1channels~1_count'
+  /{scopeId}/data/channels/{channelInfoId}:
+    $ref: './dataChannel/dataChannel-scopeId-channelInfoId.yaml#/paths/~1{scopeId}~1data~1channels~1{channelInfoId}'
+  ### Data Client ###
+  /{scopeId}/data/clients:
+    $ref: './dataClient/dataClient-scopeId.yaml#/paths/~1{scopeId}~1data~1clients'
+  /{scopeId}/data/clients/_count:
+    $ref: './dataClient/dataClient-scopeId-_count.yaml#/paths/~1{scopeId}~1data~1clients~1_count'
+  /{scopeId}/data/clients/{clientInfoId}:
+    $ref: './dataClient/dataClient-scopeId-clientInfoId.yaml#/paths/~1{scopeId}~1data~1clients~1{clientInfoId}'
+  ### Data Message ###
+  /{scopeId}/data/messages:
+    $ref: './dataMessage/dataMessage-scopeId.yaml#/paths/~1{scopeId}~1data~1messages'
+  /{scopeId}/data/messages/_count:
+    $ref: './dataMessage/dataMessage-scopeId-_count.yaml#/paths/~1{scopeId}~1data~1messages~1_count'
+  /{scopeId}/data/messages/{datastoreMessageId}:
+    $ref: './dataMessage/dataMessage-scopeId-datastoreMessageId.yaml#/paths/~1{scopeId}~1data~1messages~1{datastoreMessageId}'
+  ### Data Metric ###
+  /{scopeId}/data/metrics:
+    $ref: './dataMetric/dataMetric-scopeId.yaml#/paths/~1{scopeId}~1data~1metrics'
+  /{scopeId}/data/metrics/_count:
+    $ref: './dataMetric/dataMetric-scopeId-_count.yaml#/paths/~1{scopeId}~1data~1metrics~1_count'
+  /{scopeId}/data/metrics/{metricInfoId}:
+    $ref: './dataMetric/dataMetric-scopeId-metricInfoId.yaml#/paths/~1{scopeId}~1data~1metrics~1{metricInfoId}'
+  ### Device ###
+  /{scopeId}/devices:
+    $ref: './device/device-scopeId.yaml#/paths/~1{scopeId}~1devices'
+  /{scopeId}/devices/{deviceId}:
+    $ref: './device/device-scopeId-deviceId.yaml#/paths/~1{scopeId}~1devices~1{deviceId}'
+  /{scopeId}/devices/_query:
+    $ref: './device/device-scopeId-_query.yaml#/paths/~1{scopeId}~1devices~1_query'
+  /{scopeId}/devices/_count:
+    $ref: './device/device-scopeId-_count.yaml#/paths/~1{scopeId}~1devices~1_count'
+  ### Device Asset ###
+  /{scopeId}/devices/{deviceId}/assets:
+    $ref: './deviceAsset/deviceAsset-scopeId-deviceId.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1assets'
+  /{scopeId}/devices/{deviceId}/assets/_read:
+    $ref: './deviceAsset/deviceAsset-scopeId-deviceId-_read.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1assets~1_read'
+  /{scopeId}/devices/{deviceId}/assets/_write:
+    $ref: './deviceAsset/deviceAsset-scopeId-deviceId-_write.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1assets~1_write'
+  ### Device Bundle ###
+  /{scopeId}/devices/{deviceId}/bundles:
+    $ref: './deviceBundle/deviceBundle-scopeId-deviceId.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1bundles'
+  /{scopeId}/devices/{deviceId}/bundles/{bundleId}/_start:
+    $ref: './deviceBundle/deviceBundle-scopeId-deviceId-_start.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1bundles~1_start'
+  /{scopeId}/devices/{deviceId}/bundles/{bundleId}/_stop:
+    $ref: './deviceBundle/deviceBundle-scopeId-deviceId-_stop.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1bundles~1_stop'
+  ### Device Command ###
+  /{scopeId}/devices/{deviceId}/commands/_execute:
+    $ref: './deviceCommand/deviceCommand-scopeId-deviceId-_execute.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1commands~1_execute'
+  ### Device Configuration ###
+  /{scopeId}/devices/{deviceId}/configurations:
+    $ref: './deviceConfiguration/deviceConfiguration-scopeId-deviceId.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1configurations'
+  /{scopeId}/devices/{deviceId}/configurations/{componentId}:
+    $ref: './deviceConfiguration/deviceConfiguration-scopeId-deviceId-componentId.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1configurations~1{componentId}'
+  ### Device Inventory ###
+  /{scopeId}/devices/{deviceId}/inventory:
+    $ref: './deviceInventory/deviceInventory-scopeId-deviceId.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1inventory'
+  /{scopeId}/devices/{deviceId}/inventory/bundles:
+    $ref: './deviceInventory/deviceInventory-scopeId-deviceId.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1inventory~1bundles'
+  /{scopeId}/devices/{deviceId}/inventory/bundles/_start:
+    $ref: './deviceInventory/deviceInventory-scopeId-deviceId.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1inventory~1bundles~1_start'
+  /{scopeId}/devices/{deviceId}/inventory/bundles/_stop:
+    $ref: './deviceInventory/deviceInventory-scopeId-deviceId.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1inventory~1bundles~1_stop'
+  /{scopeId}/devices/{deviceId}/inventory/containers:
+    $ref: './deviceInventory/deviceInventory-scopeId-deviceId.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1inventory~1containers'
+  /{scopeId}/devices/{deviceId}/inventory/containers/_start:
+    $ref: './deviceInventory/deviceInventory-scopeId-deviceId.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1inventory~1containers~1_start'
+  /{scopeId}/devices/{deviceId}/inventory/containers/_stop:
+    $ref: './deviceInventory/deviceInventory-scopeId-deviceId.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1inventory~1containers~1_stop'
+  /{scopeId}/devices/{deviceId}/inventory/system:
+    $ref: './deviceInventory/deviceInventory-scopeId-deviceId.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1inventory~1system'
+  /{scopeId}/devices/{deviceId}/inventory/packages:
+    $ref: './deviceInventory/deviceInventory-scopeId-deviceId.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1inventory~1packages'
+  ### Device Keystore ###
+  /{scopeId}/devices/{deviceId}/keystore:
+    $ref: './deviceKeystore/deviceKeystore-scopeId-deviceId.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1keystore'
+  /{scopeId}/devices/{deviceId}/keystore/items:
+    $ref: './deviceKeystore/deviceKeystore-scopeId-deviceId.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1keystore~1items'
+  /{scopeId}/devices/{deviceId}/keystore/item:
+    $ref: './deviceKeystore/deviceKeystore-scopeId-deviceId.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1keystore~1item'
+  /{scopeId}/devices/{deviceId}/keystore/items/certificateInfo:
+    $ref: './deviceKeystore/deviceKeystore-scopeId-deviceId.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1keystore~1items~1certificateInfo'
+  /{scopeId}/devices/{deviceId}/keystore/items/certificateRaw:
+    $ref: './deviceKeystore/deviceKeystore-scopeId-deviceId.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1keystore~1items~1certificateRaw'
+  /{scopeId}/devices/{deviceId}/keystore/items/keypair:
+    $ref: './deviceKeystore/deviceKeystore-scopeId-deviceId.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1keystore~1items~1keypair'
+  /{scopeId}/devices/{deviceId}/keystore/items/csr:
+    $ref: './deviceKeystore/deviceKeystore-scopeId-deviceId.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1keystore~1items~1csr'
+  ### Device Notification ###
+  /{scopeId}/devices/{deviceId}/operations/{operationId}/notifications:
+    $ref: './deviceNotification/deviceNotification-scopeId-deviceId-operationId.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1operations~1{operationId}~1notifications'
+  /{scopeId}/devices/{deviceId}/operations/{operationId}/notifications/{notificationId}:
+    $ref: './deviceNotification/deviceNotification-scopeId-deviceId-operationId-notificationId.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1operations~1{operationId}~1notifications~1{notificationId}'
+  /{scopeId}/devices/{deviceId}/operations/{operationId}/notifications/_query:
+    $ref: './deviceNotification/deviceNotification-scopeId-deviceId-operationId-_query.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1operations~1{operationId}~1notifications~1_query'
+  /{scopeId}/devices/{deviceId}/operations/{operationId}/notifications/_count:
+    $ref: './deviceNotification/deviceNotification-scopeId-deviceId-operationId-_count.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1operations~1{operationId}~1notifications~1_count'
+  ### Device Operation ###
+  /{scopeId}/devices/{deviceId}/operations:
+    $ref: './deviceOperation/deviceOperation-scopeId-deviceId.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1operations'
+  /{scopeId}/devices/{deviceId}/operations/{operationId}:
+    $ref: './deviceOperation/deviceOperation-scopeId-deviceId-operationId.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1operations~1{operationId}'
+  /{scopeId}/devices/{deviceId}/operations/_query:
+    $ref: './deviceOperation/deviceOperation-scopeId-deviceId-_query.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1operations~1_query'
+  /{scopeId}/devices/{deviceId}/operations/_count:
+    $ref: './deviceOperation/deviceOperation-scopeId-deviceId-_count.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1operations~1_count'
+  ### Device Package ###
+  /{scopeId}/devices/{deviceId}/packages:
+    $ref: './devicePackage/devicePackage-scopeId-deviceId.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1packages'
+  /{scopeId}/devices/{deviceId}/packages/_download:
+    $ref: './devicePackage/devicePackage-scopeId-deviceId-_download.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1packages~1_download'
+  /{scopeId}/devices/{deviceId}/packages/_uninstall:
+    $ref: './devicePackage/devicePackage-scopeId-deviceId-_uninstall.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1packages~1_uninstall'
+  ### Device Request ###
+  /{scopeId}/devices/{deviceId}/requests:
+    $ref: './deviceRequest/deviceRequest-scopeId-deviceId.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1requests'
+  ### Device Snapshot ###
+  /{scopeId}/devices/{deviceId}/snapshots:
+    $ref: './deviceSnapshot/deviceSnapshot-scopeId-deviceId.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1snapshots'
+  /{scopeId}/devices/{deviceId}/snapshots/{snapshotId}:
+    $ref: './deviceSnapshot/deviceSnapshot-scopeId-deviceId-snapshotId.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1snapshots~1{snapshotId}'
+  /{scopeId}/devices/{deviceId}/snapshots/{snapshotId}/_rollback:
+    $ref: './deviceSnapshot/deviceSnapshot-scopeId-deviceId-snapshotId-_rollback.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1snapshots~1{snapshotId}~1_rollback'
+  ### Device Connection ###
+  /{scopeId}/deviceconnections:
+    $ref: './deviceConnection/deviceConnection-scopeId.yaml#/paths/~1{scopeId}~1deviceconnections'
+  /{scopeId}/deviceconnections/{connectionId}:
+    $ref: './deviceConnection/deviceConnection-scopeId-connectionId.yaml#/paths/~1{scopeId}~1deviceconnections~1{connectionId}'
+  /{scopeId}/deviceconnections/{connectionId}/options:
+    $ref: './deviceConnection/deviceConnection-scopeId-connectionId-options.yaml#/paths/~1{scopeId}~1deviceconnections~1{connectionId}~1options'
+  /{scopeId}/deviceconnections/_count:
+    $ref: './deviceConnection/deviceConnection-scopeId-_count.yaml#/paths/~1{scopeId}~1deviceconnections~1_count'
+  /{scopeId}/deviceconnections/_query:
+    $ref: './deviceConnection/deviceConnection-scopeId-_query.yaml#/paths/~1{scopeId}~1deviceconnections~1_query'
+  ### Device Event ###
+  /{scopeId}/devices/{deviceId}/events:
+    $ref: './deviceEvent/deviceEvent-scopeId-deviceId.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1events'
+  /{scopeId}/devices/{deviceId}/events/{deviceEventId}:
+    $ref: './deviceEvent/deviceEvent-scopeId-deviceId-deviceEventId.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1events~1{deviceEventId}'
+  /{scopeId}/devices/{deviceId}/events/_count:
+    $ref: './deviceEvent/deviceEvent-scopeId-deviceId-_count.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1events~1_count'
+  /{scopeId}/devices/{deviceId}/events/_query:
+    $ref: './deviceEvent/deviceEvent-scopeId-deviceId-_query.yaml#/paths/~1{scopeId}~1devices~1{deviceId}~1events~1_query'
+  ### Domain ###
+  /{scopeId}/domains:
+    $ref: './domain/domain-scopeId.yaml#/paths/~1{scopeId}~1domains'
+  /{scopeId}/domains/{domainId}:
+    $ref: './domain/domain-scopeId-domainId.yaml#/paths/~1{scopeId}~1domains~1{domainId}'
+  /{scopeId}/domains/_count:
+    $ref: './domain/domain-scopeId-_count.yaml#/paths/~1{scopeId}~1domains~1_count'
+  /{scopeId}/domains/_query:
+    $ref: './domain/domain-scopeId-_query.yaml#/paths/~1{scopeId}~1domains~1_query'
+  ### Endpoint Info ###
+  /{scopeId}/endpointInfos:
+    $ref: './endpointInfo/endpointInfo-scopeId.yaml#/paths/~1{scopeId}~1endpointInfos'
+  /{scopeId}/endpointInfos/{endpointInfoId}:
+    $ref: './endpointInfo/endpointInfo-scopeId-endpointInfoId.yaml#/paths/~1{scopeId}~1endpointInfos~1{endpointInfoId}'
+  /{scopeId}/endpointInfos/_count:
+    $ref: './endpointInfo/endpointInfo-scopeId-_count.yaml#/paths/~1{scopeId}~1endpointInfos~1_count'
+  /{scopeId}/endpointInfos/_query:
+    $ref: './endpointInfo/endpointInfo-scopeId-_query.yaml#/paths/~1{scopeId}~1endpointInfos~1_query'
+  ### Group ###
+  /{scopeId}/groups:
+    $ref: './group/group-scopeId.yaml#/paths/~1{scopeId}~1groups'
+  /{scopeId}/groups/{groupId}:
+    $ref: './group/group-scopeId-groupId.yaml#/paths/~1{scopeId}~1groups~1{groupId}'
+  /{scopeId}/groups/_count:
+    $ref: './group/group-scopeId-_count.yaml#/paths/~1{scopeId}~1groups~1_count'
+  /{scopeId}/groups/_query:
+    $ref: './group/group-scopeId-_query.yaml#/paths/~1{scopeId}~1groups~1_query'
+  ### Job ###
+  /{scopeId}/jobs:
+    $ref: './job/job-scopeId.yaml#/paths/~1{scopeId}~1jobs'
+  /{scopeId}/jobs/{jobId}:
+    $ref: './job/job-scopeId-jobId.yaml#/paths/~1{scopeId}~1jobs~1{jobId}'
+  /{scopeId}/jobs/_count:
+    $ref: './job/job-scopeId-_count.yaml#/paths/~1{scopeId}~1jobs~1_count'
+  /{scopeId}/jobs/_query:
+    $ref: './job/job-scopeId-_query.yaml#/paths/~1{scopeId}~1jobs~1_query'
+  ### Job Engine ###
+  /{scopeId}/jobs/{jobId}/_start:
+    $ref: './jobEngine/jobEngine-scopeId-jobId.yaml#/paths/~1{scopeId}~1jobs~1{jobId}~1_start'
+  /{scopeId}/jobs/{jobId}/_stop:
+    $ref: './jobEngine/jobEngine-scopeId-jobId.yaml#/paths/~1{scopeId}~1jobs~1{jobId}~1_stop'
+  /{scopeId}/jobs/_isRunning:
+    $ref: './jobEngine/jobEngine-scopeId.yaml#/paths/~1{scopeId}~1jobs~1_isRunning'
+  /{scopeId}/jobs/{jobId}/_isRunning:
+    $ref: './jobEngine/jobEngine-scopeId-jobId.yaml#/paths/~1{scopeId}~1jobs~1{jobId}~1_isRunning'
+  /{scopeId}/jobs/{jobId}/executions/{executionId}/_resume:
+    $ref: './jobEngine/jobEngine-scopeId-jobId-executionId.yaml#/paths/~1{scopeId}~1jobs~1{jobId}~1executions~1{executionId}~1_resume'
+  /{scopeId}/jobs/{jobId}/executions/{executionId}/_stop:
+    $ref: './jobEngine/jobEngine-scopeId-jobId-executionId.yaml#/paths/~1{scopeId}~1jobs~1{jobId}~1executions~1{executionId}~1_stop'
+  ### Job Execution ###
+  /{scopeId}/jobs/{jobId}/executions:
+    $ref: './jobExecution/job-scopeId-jobId-executions.yaml#/paths/~1{scopeId}~1jobs~1{jobId}~1executions'
+  /{scopeId}/jobs/{jobId}/executions/{executionId}:
+    $ref: './jobExecution/job-scopeId-jobId-executions-executionId.yaml#/paths/~1{scopeId}~1jobs~1{jobId}~1executions~1{executionId}'
+  /{scopeId}/jobs/{jobId}/executions/{executionId}/targets:
+    $ref: './jobExecution/job-scopeId-jobId-executions-executionId-targets.yaml#/paths/~1{scopeId}~1jobs~1{jobId}~1executions~1{executionId}~1targets'
+  /{scopeId}/jobs/{jobId}/executions/_count:
+    $ref: './jobExecution/job-scopeId-jobId-executions-_count.yaml#/paths/~1{scopeId}~1jobs~1{jobId}~1executions~1_count'
+  /{scopeId}/jobs/{jobId}/executions/_query:
+    $ref: './jobExecution/job-scopeId-jobId-executions-_query.yaml#/paths/~1{scopeId}~1jobs~1{jobId}~1executions~1_query'
+  ### Job Target ###
+  /{scopeId}/jobs/{jobId}/targets:
+    $ref: './jobTarget/job-scopeId-jobId-targets.yaml#/paths/~1{scopeId}~1jobs~1{jobId}~1targets'
+  /{scopeId}/jobs/{jobId}/targets/{targetId}:
+    $ref: './jobTarget/job-scopeId-jobId-targets-targetId.yaml#/paths/~1{scopeId}~1jobs~1{jobId}~1targets~1{targetId}'
+  /{scopeId}/jobs/{jobId}/targets/{targetId}/executions:
+    $ref: './jobTarget/job-scopeId-jobId-targets-targetId-executions.yaml#/paths/~1{scopeId}~1jobs~1{jobId}~1targets~1{targetId}~1executions'
+  /{scopeId}/jobs/{jobId}/targets/_count:
+    $ref: './jobTarget/job-scopeId-jobId-targets-_count.yaml#/paths/~1{scopeId}~1jobs~1{jobId}~1targets~1_count'
+  /{scopeId}/jobs/{jobId}/targets/_query:
+    $ref: './jobTarget/job-scopeId-jobId-targets-_query.yaml#/paths/~1{scopeId}~1jobs~1{jobId}~1targets~1_query'
+  ### Job Trigger ###
+  /{scopeId}/jobs/{jobId}/triggers:
+    $ref: './jobTrigger/job-scopeId-jobId-triggers.yaml#/paths/~1{scopeId}~1jobs~1{jobId}~1triggers'
+  /{scopeId}/jobs/{jobId}/triggers/{triggerId}:
+    $ref: './jobTrigger/job-scopeId-jobId-triggers-triggerId.yaml#/paths/~1{scopeId}~1jobs~1{jobId}~1triggers~1{triggerId}'
+  /{scopeId}/jobs/{jobId}/triggers/_count:
+    $ref: './jobTrigger/job-scopeId-jobId-triggers-_count.yaml#/paths/~1{scopeId}~1jobs~1{jobId}~1triggers~1_count'
+  /{scopeId}/jobs/{jobId}/triggers/_query:
+    $ref: './jobTrigger/job-scopeId-jobId-triggers-_query.yaml#/paths/~1{scopeId}~1jobs~1{jobId}~1triggers~1_query'
+  ### Job Trigger Definition ###
+  /{scopeId}/triggerDefinitions:
+    $ref: './triggerDefinition/triggerDefinition-scopeId.yaml#/paths/~1{scopeId}~1triggerDefinitions'
+  /{scopeId}/triggerDefinitions/{triggerDefinitionId}:
+    $ref: './triggerDefinition/triggerDefinition-scopeId-triggerDefinitionId.yaml#/paths/~1{scopeId}~1triggerDefinitions~1{triggerDefinitionId}'
+  /{scopeId}/triggerDefinitions/_query:
+    $ref: './triggerDefinition/triggerDefinition-scopeId-_query.yaml#/paths/~1{scopeId}~1triggerDefinitions~1_query'
+  /{scopeId}/triggerDefinitions/_count:
+    $ref: './triggerDefinition/triggerDefinition-scopeId-_count.yaml#/paths/~1{scopeId}~1triggerDefinitions~1_count'
+  ### Job Trigger Fired ###
+  /{scopeId}/jobs/{jobId}/triggers/{triggerId}/fired:
+    $ref: './jobTriggerFired/job-scopeId-jobId-triggers-triggerId-fired.yaml#/paths/~1{scopeId}~1jobs~1{jobId}~1triggers~1{triggerId}~1fired'
+  /{scopeId}/jobs/{jobId}/triggers/{triggerId}/fired/_count:
+    $ref: './jobTriggerFired/job-scopeId-jobId-triggers-triggerId-fired-_count.yaml#/paths/~1{scopeId}~1jobs~1{jobId}~1triggers~1{triggerId}~1fired~1_count'
+  /{scopeId}/jobs/{jobId}/triggers/{triggerId}/fired/_query:
+    $ref: './jobTriggerFired/job-scopeId-jobId-triggers-triggerId-fired-_query.yaml#/paths/~1{scopeId}~1jobs~1{jobId}~1triggers~1{triggerId}~1fired~1_query'
+  ### Job Step ###
+  /{scopeId}/jobs/{jobId}/steps:
+    $ref: './jobStep/job-scopeId-jobId-steps.yaml#/paths/~1{scopeId}~1jobs~1{jobId}~1steps'
+  /{scopeId}/jobs/{jobId}/steps/{stepId}:
+    $ref: './jobStep/job-scopeId-jobId-steps-stepId.yaml#/paths/~1{scopeId}~1jobs~1{jobId}~1steps~1{stepId}'
+  /{scopeId}/jobs/{jobId}/steps/_count:
+    $ref: './jobStep/job-scopeId-jobId-steps-_count.yaml#/paths/~1{scopeId}~1jobs~1{jobId}~1steps~1_count'
+  /{scopeId}/jobs/{jobId}/steps/_query:
+    $ref: './jobStep/job-scopeId-jobId-steps-_query.yaml#/paths/~1{scopeId}~1jobs~1{jobId}~1steps~1_query'
+  ### Job Step Definition ###
+  /{scopeId}/jobStepDefinitions:
+    $ref: './jobStepDefinition/jobStepDefinition-scopeId.yaml#/paths/~1{scopeId}~1jobStepDefinitions'
+  /{scopeId}/jobStepDefinitions/{jobStepDefinitionId}:
+    $ref: './jobStepDefinition/jobStepDefinition-scopeId-jobStepDefinitionId.yaml#/paths/~1{scopeId}~1jobStepDefinitions~1{jobStepDefinitionId}'
+  /{scopeId}/jobStepDefinitions/_query:
+    $ref: './jobStepDefinition/jobStepDefinition-scopeId-_query.yaml#/paths/~1{scopeId}~1jobStepDefinitions~1_query'
+  /{scopeId}/jobStepDefinitions/_count:
+    $ref: './jobStepDefinition/jobStepDefinition-scopeId-_count.yaml#/paths/~1{scopeId}~1jobStepDefinitions~1_count'
+  ### Role ###
+  /{scopeId}/roles:
+    $ref: './role/role-scopeId.yaml#/paths/~1{scopeId}~1roles'
+  /{scopeId}/roles/{roleId}:
+    $ref: './role/role-scopeId-roleId.yaml#/paths/~1{scopeId}~1roles~1{roleId}'
+  /{scopeId}/roles/_count:
+    $ref: './role/role-scopeId-_count.yaml#/paths/~1{scopeId}~1roles~1_count'
+  /{scopeId}/roles/_query:
+    $ref: './role/role-scopeId-_query.yaml#/paths/~1{scopeId}~1roles~1_query'
+  /{scopeId}/roles/{roleId}/permissions:
+    $ref: './role/rolePermission-scopeId-roleId.yaml#/paths/~1{scopeId}~1roles~1{roleId}~1permissions'
+  /{scopeId}/roles/{roleId}/permissions/{rolePermissionId}:
+    $ref: './role/rolePermission-scopeId-roleId-permissionId.yaml#/paths/~1{scopeId}~1roles~1{roleId}~1permissions~1{permissionId}'
+  /{scopeId}/roles/{roleId}/permissions/_count:
+    $ref: './role/rolePermission-scopeId-roleId-_count.yaml#/paths/~1{scopeId}~1roles~1{roleId}~1permissions~1_count'
+  /{scopeId}/roles/{roleId}/permissions/_query:
+    $ref: './role/rolePermission-scopeId-roleId-_query.yaml#/paths/~1{scopeId}~1roles~1{roleId}~1permissions~1_query'
+  /{scopeId}/roles/{roleId}/users:
+    $ref: './role/role-scopeId-roleId-users.yaml#/paths/~1{scopeId}~1roles~1{roleId}~1users'
+  ### Service Configuration ###
+  /{scopeId}/serviceConfigurations:
+    $ref: './serviceConfiguration/serviceConfiguration-scopeId.yaml#/paths/~1{scopeId}~1serviceConfigurations'
+  /{scopeId}/serviceConfigurations/{componentId}:
+    $ref: './serviceConfiguration/serviceConfiguration-scopeId-componentId.yaml#/paths/~1{scopeId}~1serviceConfigurations~1{componentId}'
+  ### Stream ###
+  /{scopeId}/streams/messages:
+    $ref: './stream/stream-scopeId.yaml#/paths/~1{scopeId}~1streams~1messages'
+  ### Tag ###
+  /{scopeId}/tags:
+    $ref: './tag/tag-scopeId.yaml#/paths/~1{scopeId}~1tags'
+  /{scopeId}/tags/{tagId}:
+    $ref: './tag/tag-scopeId-tagId.yaml#/paths/~1{scopeId}~1tags~1{tagId}'
+  /{scopeId}/tags/_count:
+    $ref: './tag/tag-scopeId-_count.yaml#/paths/~1{scopeId}~1tags~1_count'
+  /{scopeId}/tags/_query:
+    $ref: './tag/tag-scopeId-_query.yaml#/paths/~1{scopeId}~1tags~1_query'
+  ### User ###
+  /{scopeId}/users:
+    $ref: './user/user-scopeId.yaml#/paths/~1{scopeId}~1users'
+  /{scopeId}/users/{userId}:
+    $ref: './user/user-scopeId-userId.yaml#/paths/~1{scopeId}~1users~1{userId}'
+  /{scopeId}/users/_count:
+    $ref: './user/user-scopeId-_count.yaml#/paths/~1{scopeId}~1users~1_count'
+  /{scopeId}/users/_query:
+    $ref: './user/user-scopeId-_query.yaml#/paths/~1{scopeId}~1users~1_query'
+  /{scopeId}/users/{userId}/mfa:
+    $ref: './user/user-scopeId-userId-mfa.yaml#/paths/~1{scopeId}~1users~1{userId}~1mfa'
+  /{scopeId}/users/{userId}/mfa/disableTrust:
+    $ref: './user/user-scopeId-userId-mfa-disableTrust.yaml#/paths/~1{scopeId}~1users~1{userId}~1mfa~1disableTrust'
+
+components:
+  parameters:
+    scopeId:
+      name: scopeId
+      in: path
+      description: |
+        The ID of the Scope where to perform the operation.
+      schema:
+        allOf:
+          - $ref: '#/components/schemas/kapuaId'
+          - default: _
+      required: true
+    limit:
+      name: limit
+      in: query
+      description: A Limit on the result size. The result set will not contain more items than this number
+      schema:
+        type: integer
+        default: 50
+    offset:
+      name: offset
+      in: query
+      description: An Offset on the result size. Used to skip the first `n` items of a result set, with `n` equal to the value of `offset`
+      schema:
+        type: integer
+        default: 0
+    askTotalCount:
+      name: askTotalCount
+      in: query
+      description: If true, the total count of the entities matching the query will be included in the result set
+      schema:
+        type: boolean
+        default: false
+    sortParam:
+      name: sortParam
+      in: query
+      description: The name of the parameter that will be used as a sorting key
+      schema:
+        type: string
+    sortDir:
+      name: sortDir
+      in: query
+      description: The sort direction. Can be ASCENDING (default), DESCENDING. Case-insensitive.
+      schema:
+        type: string
+        enum:
+          - ASCENDING
+          - DESCENDING
+        default: ASCENDING
+  schemas:
+    kapuaId:
+      type: string
+      pattern: '[A-Za-z0-9-_=]+'
+      description: The standard format for any ID in Kapua. It's encoded as a [base64url URL- and filename-safe (RFC 4648 §5)](https://tools.ietf.org/html/rfc4648#section-5)
+    ### Entities ###
+    kapuaEntity:
+      description: A standard Entity, that doesn't support edits and versioning. All the objects (except for Datastore objects) in Kapua are Entities
+      type: object
+      properties:
+        id:
+          allOf:
+            - $ref: '#/components/schemas/kapuaId'
+            - description: The ID of the Entity
+              readOnly: true
+        scopeId:
+          allOf:
+            - $ref: '#/components/schemas/kapuaId'
+            - description: The ID of the Scope containing the Entity
+              readOnly: true
+        createdOn:
+          description: The date and time when this entity was created
+          type: string
+          format: 'date-time'
+          readOnly: true
+        createdBy:
+          allOf:
+            - $ref: '#/components/schemas/kapuaId'
+            - description: The ID of the Entity who created this Entity
+              readOnly: true
+    kapuaUpdatableEntity:
+      allOf:
+        - $ref: '#/components/schemas/kapuaEntity'
+        - description: An Entity that also supports edits and versioning
+          type: object
+          properties:
+            modifiedOn:
+              description: The date and time when this entity was modified
+              type: string
+              format: 'date-time'
+              readOnly: true
+            modifiedBy:
+              allOf:
+                - $ref: '#/components/schemas/kapuaId'
+                - description: The ID of the Entity who modified this Entity
+                  readOnly: true
+            optlock:
+              description: |
+                The optlock field is used to detect that this entity has not been modified by someone else. When updating an entity, first do a find to get the latest version of the entity and note the value of the optlock. Then in the update operation, set the optlock value to match the value that you found. If someone else has updated the entity between your find and update operations, the update will fail and the db/server will return an error.\
+                See this [StackOverflow question](http://stackoverflow.com/questions/129329/optimistic-vs-pessimistic-locking) for more information on optimistic locking
+              type: integer
+    kapuaNamedEntity:
+      allOf:
+        - $ref: '#/components/schemas/kapuaUpdatableEntity'
+        - description: An UpdatableEntity that also has a name and a description
+          type: object
+          properties:
+            name:
+              description: The name of the Entity
+              type: string
+            description:
+              description: The description of the Entity
+              type: string
+    kapuaQuery:
+      description: A base object for all Queries
+      type: object
+      properties:
+        limit:
+          description: A Limit on the result size. The result set will not contain more items than this number
+          type: integer
+          default: 50
+        offset:
+          description: An Offset on the result size. Used to skip the first `n` items of a result set, with `n` equal to the value of `offset`
+          type: integer
+          default: 0
+        askTotalCount:
+          description: A flag to ask the total results count in the response, in addition to the data set as requested with the `offset` and `limit` parameters
+          type: boolean
+          default: false
+      example:
+        offset: 0
+        limit: 50
+    ### Creators ###
+    kapuaEntityCreator:
+      description: An object that contains the informations needed to create an Entity
+      type: object
+    kapuaUpdatableEntityCreator:
+      allOf:
+        - $ref: '#/components/schemas/kapuaEntityCreator'
+        - description: An object that contains the informations needed to create an Updatable Entity
+          type: object
+    kapuaNamedEntityCreator:
+      allOf:
+        - $ref: '#/components/schemas/kapuaUpdatableEntityCreator'
+        - description: An object that contains the informations needed to create a Named Entity
+          type: object
+          properties:
+            name:
+              description: The name of the Entity
+              type: string
+            description:
+              description: The description of the Entity
+              type: string
+          required:
+            - name
+    ### Other Base Entities ###
+    kapuaError:
+      description: The base object to represent an Error
+      properties:
+        message:
+          type: string
+          description: An extended description of the error that occurred when performing the operation
+        kapuaErrorCode:
+          type: string
+          description: An human readable error code that can be used to
+    kapuaListResult:
+      description: A container for all the Entities List
+      type: object
+      properties:
+        limitExceeded:
+          description: A flag indicating if more results are available but were not returned because of the limit imposed in the query
+          type: boolean
+        size:
+          description: The size of the list containing the items
+          type: integer
+        totalCount:
+          description: The total count of the elements that matched the query. Available only if `askTotalCount` was `true` in the query object.
+          type: integer
+      required:
+        - limitedExceeded
+        - size
+    kapuaCountResult:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total count of the Entities available in the Scope
+    ### AccessInfo Entities ###
+    accessInfo:
+      $ref: './accessInfo/accessInfo.yaml#/components/schemas/accessInfo'
+    accessInfoCreator:
+      $ref: './accessInfo/accessInfo.yaml#/components/schemas/accessInfoCreator'
+    accessInfoListResult:
+      $ref: './accessInfo/accessInfo.yaml#/components/schemas/accessInfoListResult'
+    permission:
+      $ref: './accessInfo/accessInfo.yaml#/components/schemas/permission'
+    accessPermission:
+      $ref: './accessInfo/accessInfo.yaml#/components/schemas/accessPermission'
+    accessPermissionCreator:
+      $ref: './accessInfo/accessInfo.yaml#/components/schemas/accessPermissionCreator'
+    accessPermissionListResult:
+      $ref: './accessInfo/accessInfo.yaml#/components/schemas/accessPermissionListResult'
+    accessRole:
+      $ref: './accessInfo/accessInfo.yaml#/components/schemas/accessRole'
+    accessRoleCreator:
+      $ref: './accessInfo/accessInfo.yaml#/components/schemas/accessRoleCreator'
+    accessRoleListResult:
+      $ref: './accessInfo/accessInfo.yaml#/components/schemas/accessRoleListResult'
+    ### Account Entities ###
+    account:
+      $ref: './account/account.yaml#/components/schemas/account'
+    accountCreator:
+      $ref: './account/account.yaml#/components/schemas/accountCreator'
+    accountListResult:
+      $ref: './account/account.yaml#/components/schemas/accountListResult'
+    ### Authentication Entities ###
+    accessToken:
+      $ref: './authentication/authentication.yaml#/components/schemas/accessToken'
+    loginInfo:
+      $ref: './authentication/authentication.yaml#/components/schemas/loginInfo'
+    ### Credential Entities ###
+    credential:
+      $ref: './credential/credential.yaml#/components/schemas/credential'
+    credentialCreator:
+      $ref: './credential/credential.yaml#/components/schemas/credentialCreator'
+    credentialListResult:
+      $ref: './credential/credential.yaml#/components/schemas/credentialListResult'
+    ### Data Channel Entities ###
+    channelInfo:
+      $ref: './dataChannel/dataChannel.yaml#/components/schemas/channelInfo'
+    channelInfoListResult:
+      $ref: './dataChannel/dataChannel.yaml#/components/schemas/channelInfoListResult'
+    ### Data Client Entities ###
+    clientInfo:
+      $ref: './dataClient/dataClient.yaml#/components/schemas/clientInfo'
+    clientInfoListResult:
+      $ref: './dataClient/dataClient.yaml#/components/schemas/clientInfoListResult'
+    ### Data Message Entities ###
+    metric:
+      $ref: './dataMessage/dataMessage.yaml#/components/schemas/metric'
+    position:
+      $ref: './dataMessage/dataMessage.yaml#/components/schemas/position'
+    dataMessage:
+      $ref: './dataMessage/dataMessage.yaml#/components/schemas/dataMessage'
+    dataMessageInsertResponse:
+      $ref: './dataMessage/dataMessage.yaml#/components/schemas/dataMessageInsertResponse'
+    dataMessageListResult:
+      $ref: './dataMessage/dataMessage.yaml#/components/schemas/dataMessageListResult'
+    ### Data Metric Entities ###
+    metricInfo:
+      $ref: './dataMetric/dataMetric.yaml#/components/schemas/metricInfo'
+    metricInfoListResult:
+      $ref: './dataMetric/dataMetric.yaml#/components/schemas/metricInfoListResult'
+    ### Device Entities ###
+    fetchAttribute:
+      $ref: './device/device.yaml#/components/schemas/fetchAttribute'
+    device:
+      $ref: './device/device.yaml#/components/schemas/device'
+    deviceCreator:
+      $ref: './device/device.yaml#/components/schemas/deviceCreator'
+    deviceListResult:
+      $ref: './device/device.yaml#/components/schemas/deviceListResult'
+    ### Device Asset Entities ###
+    deviceAssetDefinition:
+      $ref: './deviceAsset/deviceAsset.yaml#/components/schemas/deviceAssetDefinition'
+    deviceAssetDefinitions:
+      $ref: './deviceAsset/deviceAsset.yaml#/components/schemas/deviceAssetDefinitions'
+    deviceAssetValue:
+      $ref: './deviceAsset/deviceAsset.yaml#/components/schemas/deviceAssetValue'
+    deviceAssetValues:
+      $ref: './deviceAsset/deviceAsset.yaml#/components/schemas/deviceAssetValues'
+    channelDefinition:
+      $ref: './deviceAsset/deviceAsset.yaml#/components/schemas/channelDefinition'
+    channelValue:
+      $ref: './deviceAsset/deviceAsset.yaml#/components/schemas/channelValue'
+    ### Device Bundle Entities ###
+    deviceBundle:
+      $ref: './deviceBundle/deviceBundle.yaml#/components/schemas/deviceBundle'
+    deviceBundles:
+      $ref: './deviceBundle/deviceBundle.yaml#/components/schemas/deviceBundles'
+    ### Device Command Entities ###
+    commandInput:
+      $ref: './deviceCommand/deviceCommand.yaml#/components/schemas/commandInput'
+    commandOutput:
+      $ref: './deviceCommand/deviceCommand.yaml#/components/schemas/commandOutput'
+    ### Device Configuration Entities ###
+    componentConfiguration:
+      $ref: './deviceConfiguration/deviceConfiguration.yaml#/components/schemas/componentConfiguration'
+    componentConfigurationInput:
+      $ref: './deviceConfiguration/deviceConfiguration.yaml#/components/schemas/componentConfigurationInput'
+    componentConfigurations:
+      $ref: './deviceConfiguration/deviceConfiguration.yaml#/components/schemas/componentConfigurations'
+    componentConfigurationsInput:
+      $ref: './deviceConfiguration/deviceConfiguration.yaml#/components/schemas/componentConfigurationsInput'
+    icon:
+      $ref: './deviceConfiguration/deviceConfiguration.yaml#/components/schemas/icon'
+    propertyDefinition:
+      $ref: './deviceConfiguration/deviceConfiguration.yaml#/components/schemas/propertyDefinition'
+    option:
+      $ref: './deviceConfiguration/deviceConfiguration.yaml#/components/schemas/option'
+    attributeDefinition:
+      $ref: './deviceConfiguration/deviceConfiguration.yaml#/components/schemas/attributeDefinition'
+    ### Device Connection Entities ###
+    connection:
+      $ref: './deviceConnection/deviceConnection.yaml#/components/schemas/connection'
+    connectionListResult:
+      $ref: './deviceConnection/deviceConnection.yaml#/components/schemas/connectionListResult'
+    ### Device Event Entities ###
+    deviceEvent:
+      $ref: './deviceEvent/deviceEvent.yaml#/components/schemas/deviceEvent'
+    deviceEventListResult:
+      $ref: './deviceEvent/deviceEvent.yaml#/components/schemas/deviceEventListResult'
+    ### Device Inventory Entities ###
+    inventoryItem:
+      $ref: './deviceInventory/deviceInventory.yaml#/components/schemas/inventoryItem'
+    deviceInventory:
+      $ref: './deviceInventory/deviceInventory.yaml#/components/schemas/deviceInventory'
+    deviceInventoryBundle:
+      $ref: './deviceInventory/deviceInventory.yaml#/components/schemas/deviceInventoryBundle'
+    deviceInventoryBundles:
+      $ref: './deviceInventory/deviceInventory.yaml#/components/schemas/deviceInventoryBundles'
+    deviceInventoryPackage:
+      $ref: './deviceInventory/deviceInventory.yaml#/components/schemas/deviceInventorySystemPackage'
+    deviceInventoryPackages:
+      $ref: './deviceInventory/deviceInventory.yaml#/components/schemas/deviceInventorySystemPackages'
+    deviceInventoryDeploymentPackage:
+      $ref: './deviceInventory/deviceInventory.yaml#/components/schemas/deviceInventoryDeploymentPackage'
+    deviceInventoryDeploymentPackages:
+      $ref: './deviceInventory/deviceInventory.yaml#/components/schemas/deviceInventoryDeploymentPackages'
+    ### Device Keystore Entities ###
+    deviceKeystores:
+      $ref: './deviceKeystore/deviceKeystore.yaml#/components/schemas/deviceKeystores'
+    deviceKeystore:
+      $ref: './deviceKeystore/deviceKeystore.yaml#/components/schemas/deviceKeystore'
+    deviceKeystoreItems:
+      $ref: './deviceKeystore/deviceKeystore.yaml#/components/schemas/deviceKeystoreItems'
+    deviceKeystoreItem:
+      $ref: './deviceKeystore/deviceKeystore.yaml#/components/schemas/deviceKeystoreItem'
+    deviceKeystoreSubjectAN:
+      $ref: './deviceKeystore/deviceKeystore.yaml#/components/schemas/deviceKeystoreSubjectAN'
+    deviceKeystoreCertificate:
+      $ref: './deviceKeystore/deviceKeystore.yaml#/components/schemas/deviceKeystoreCertificate'
+    deviceKeystoreKeypair:
+      $ref: './deviceKeystore/deviceKeystore.yaml#/components/schemas/deviceKeystoreKeypair'
+    deviceKeystoreCSRInfo:
+      $ref: './deviceKeystore/deviceKeystore.yaml#/components/schemas/deviceKeystoreCSRInfo'
+    deviceKeystoreCSR:
+      $ref: './deviceKeystore/deviceKeystore.yaml#/components/schemas/deviceKeystoreCSR'
+    ### Device Notification Entities ###
+    deviceNotification:
+      $ref: './deviceNotification/deviceNotification.yaml#/components/schemas/deviceNotification'
+    deviceNotificationListResult:
+      $ref: './deviceNotification/deviceNotification.yaml#/components/schemas/deviceNotificationListResult'
+    ### Device Operation Entities ###
+    operationProperty:
+      $ref: './deviceOperation/deviceOperation.yaml#/components/schemas/operationProperty'
+    deviceOperation:
+      $ref: './deviceOperation/deviceOperation.yaml#/components/schemas/deviceOperation'
+    deviceOperationListResult:
+      $ref: './deviceOperation/deviceOperation.yaml#/components/schemas/deviceOperationListResult'
+    ### Device Package Entities ###
+    bundleInfo:
+      $ref: './devicePackage/devicePackage.yaml#/components/schemas/bundleInfo'
+    devicePackage:
+      $ref: './devicePackage/devicePackage.yaml#/components/schemas/devicePackage'
+    devicePackages:
+      $ref: './devicePackage/devicePackage.yaml#/components/schemas/devicePackages'
+    devicePackageDownloadRequest:
+      $ref: './devicePackage/devicePackage.yaml#/components/schemas/devicePackageDownloadRequest'
+    ### Device Request Entities ###
+    requestInput:
+      $ref: './deviceRequest/deviceRequest.yaml#/components/schemas/requestInput'
+    requestOutput:
+      $ref: './deviceRequest/deviceRequest.yaml#/components/schemas/requestOutput'
+    ### Device Snapshot Entities ###
+    snapshot:
+      $ref: './deviceSnapshot/deviceSnapshot.yaml#/components/schemas/snapshot'
+    snapshots:
+      $ref: './deviceSnapshot/deviceSnapshot.yaml#/components/schemas/snapshots'
+    ### Domain Entities ###
+    domain:
+      $ref: './domain/domain.yaml#/components/schemas/domain'
+    domainListResult:
+      $ref: './domain/domain.yaml#/components/schemas/domainListResult'
+    ### Endpoint Info Entities ###
+    usage:
+      $ref: './endpointInfo/endpointInfo.yaml#/components/schemas/usage'
+    endpointInfo:
+      $ref: './endpointInfo/endpointInfo.yaml#/components/schemas/endpointInfo'
+    endpointInfoCreator:
+      $ref: './endpointInfo/endpointInfo.yaml#/components/schemas/endpointInfoCreator'
+    endpointInfoListResult:
+      $ref: './endpointInfo/endpointInfo.yaml#/components/schemas/endpointInfoListResult'
+    ### Group Entities ###
+    group:
+      $ref: './group/group.yaml#/components/schemas/group'
+    groupCreator:
+      $ref: './group/group.yaml#/components/schemas/groupCreator'
+    groupListResult:
+      $ref: './group/group.yaml#/components/schemas/groupListResult'
+    ### Job Entities ###
+    job:
+      $ref: './job/job.yaml#/components/schemas/job'
+    jobCreator:
+      $ref: './job/job.yaml#/components/schemas/jobCreator'
+    jobListResult:
+      $ref: './job/job.yaml#/components/schemas/jobListResult'
+    ### Job Engine Entities ###
+    isJobRunning:
+      $ref: './jobEngine/jobEngine.yaml#/components/schemas/isJobRunning'
+    jobStartOptions:
+      $ref: './jobEngine/jobEngine.yaml#/components/schemas/jobStartOptions'
+    ### Job Execution Entities ###
+    jobExecution:
+      $ref: './jobExecution/jobExecution.yaml#/components/schemas/jobExecution'
+    jobExecutionListResult:
+      $ref: './jobExecution/jobExecution.yaml#/components/schemas/jobExecutionListResult'
+    ### Job Step Entities ###
+    jobStep:
+      $ref: './jobStep/jobStep.yaml#/components/schemas/jobStep'
+    jobStepCreator:
+      $ref: './jobStep/jobStep.yaml#/components/schemas/jobStepCreator'
+    jobStepListResult:
+      $ref: './jobStep/jobStep.yaml#/components/schemas/jobStepListResult'
+    ### Job Step Definition Entities ###
+    jobStepDefinition:
+      $ref: './jobStepDefinition/jobStepDefinition.yaml#/components/schemas/jobStepDefinition'
+    jobStepDefinitionProperty:
+      $ref: './jobStepDefinition/jobStepDefinition.yaml#/components/schemas/jobStepDefinitionProperty'
+    jobStepDefinitionListResult:
+      $ref: './jobStepDefinition/jobStepDefinition.yaml#/components/schemas/jobStepDefinitionListResult'
+    ### Job Target Entities ###
+    jobTarget:
+      $ref: './jobTarget/jobTarget.yaml#/components/schemas/jobTarget'
+    jobTargetCreator:
+      $ref: './jobTarget/jobTarget.yaml#/components/schemas/jobTargetCreator'
+    jobTargetListResult:
+      $ref: './jobTarget/jobTarget.yaml#/components/schemas/jobTargetListResult'
+    ### Job Trigger Entities ###
+    jobTrigger:
+      $ref: './jobTrigger/jobTrigger.yaml#/components/schemas/jobTrigger'
+    jobTriggerCreator:
+      $ref: './jobTrigger/jobTrigger.yaml#/components/schemas/jobTriggerCreator'
+    jobTriggerListResult:
+      $ref: './jobTrigger/jobTrigger.yaml#/components/schemas/jobTriggerListResult'
+    ### Job Trigger Fired Entities ###
+    firedTrigger:
+      $ref: './jobTriggerFired/jobTriggerFired.yaml#/components/schemas/firedTrigger'
+    firedTriggerListResult:
+      $ref: './jobTriggerFired/jobTriggerFired.yaml#/components/schemas/firedTriggerListResult'
+    ### Role Entities ###
+    role:
+      $ref: './role/role.yaml#/components/schemas/role'
+    roleCreator:
+      $ref: './role/role.yaml#/components/schemas/roleCreator'
+    roleListResult:
+      $ref: './role/role.yaml#/components/schemas/roleListResult'
+    rolePermission:
+      $ref: './role/role.yaml#/components/schemas/rolePermission'
+    rolePermissionCreator:
+      $ref: './role/role.yaml#/components/schemas/rolePermissionCreator'
+    rolePermissionListResult:
+      $ref: './role/role.yaml#/components/schemas/rolePermissionListResult'
+    ### Service Configuration Entities ###
+    servicePropertyDefinition:
+      $ref: './serviceConfiguration/serviceConfiguration.yaml#/components/schemas/propertyDefinition'
+    serviceIcon:
+      $ref: './serviceConfiguration/serviceConfiguration.yaml#/components/schemas/icon'
+    serviceComponentConfiguration:
+      $ref: './serviceConfiguration/serviceConfiguration.yaml#/components/schemas/componentConfiguration'
+    serviceComponentConfigurationInput:
+      $ref: './serviceConfiguration/serviceConfiguration.yaml#/components/schemas/componentConfigurationInput'
+    serviceComponentConfigurations:
+      $ref: './serviceConfiguration/serviceConfiguration.yaml#/components/schemas/componentConfigurations'
+    serviceComponentConfigurationsInput:
+      $ref: './serviceConfiguration/serviceConfiguration.yaml#/components/schemas/componentConfigurationsInput'
+    serviceOption:
+      $ref: './serviceConfiguration/serviceConfiguration.yaml#/components/schemas/option'
+    serviceAttributeDefinition:
+      $ref: './serviceConfiguration/serviceConfiguration.yaml#/components/schemas/attributeDefinition'
+    ### Tag Entities ###
+    tag:
+      $ref: './tag/tag.yaml#/components/schemas/tag'
+    tagCreator:
+      $ref: './tag/tag.yaml#/components/schemas/tagCreator'
+    tagListResult:
+      $ref: './tag/tag.yaml#/components/schemas/tagListResult'
+    ### Trigger Definition Entities ###
+    triggerProperty:
+      $ref: './triggerDefinition/triggerDefinition.yaml#/components/schemas/triggerProperty'
+    triggerDefinition:
+      $ref: './triggerDefinition/triggerDefinition.yaml#/components/schemas/triggerDefinition'
+    triggerDefinitionListResult:
+      $ref: './triggerDefinition/triggerDefinition.yaml#/components/schemas/triggerDefinitionListResult'
+    ### User Entities ###
+    user:
+      $ref: './user/user.yaml#/components/schemas/user'
+    userCreator:
+      $ref: './user/user.yaml#/components/schemas/userCreator'
+    userListResult:
+      $ref: './user/user.yaml#/components/schemas/userListResult'
+    mfaOption:
+      $ref: './user/user.yaml#/components/schemas/mfaOption'
+    mfaOptionCreator:
+      $ref: './user/user.yaml#/components/schemas/mfaOptionCreator'
+  requestBodies:
+    kapuaQuery:
+      description: An object to specify Query options
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/kapuaQuery'
+      required: true
+  responses:
+    countResult:
+      description: The count of the available Entities
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/kapuaCountResult'
+    ### Errors ###
+    kapuaError:
+      description: An error occurred while performing the request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/kapuaError'
+    entityNotFound:
+      description: The desired entity could not be found
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/responses/kapuaError/content/application~1json/schema'
+              - properties:
+                  entityType:
+                    description: The type of the entity that could not be found
+                    type: string
+                  entityId:
+                    description: The ID of the entity that could not be found
+                    type: string
+    illegalArgument:
+      description: An illegal value has been passes to the operation
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/kapuaError'
+              - properties:
+                  argumentName:
+                    description: The name of the argument who holds an illegal value
+                    type: string
+                  argumentValue:
+                    description: The illegal value passed to the operation
+                    type: string
+    illegalNullArgument:
+      description: An illegal null argument has been passed to the operation
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/kapuaError'
+              - properties:
+                  argumentName:
+                    type: string
+                    description: The name of the argument who holds an illegal null value
+    subjectUnauthorized:
+      description: The user performing the operation does not have the required permissions
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/kapuaError'
+              - properties:
+                  permission:
+                    description: The permission that is required to perform the operation, and that the current user is missing
+                    type: string
+    unauthenticated:
+      description: The provided AccessToken could not be found, or no AccessToken has been provided
+    entityUniqueness:
+      description: An Entity with the same unique fields is already present in the system
+  securitySchemes:
+    kapuaToken:
+      description: The default AccessToken Security Scheme. A [JWT](https://jwt.io) is used to represent the claims of a user
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - kapuaToken: [ ]
+
+x-explorer-enabled: false
+x-samples-languages:
+  - java
+  - python
+  - node
+  - javascript
+  - ruby
+  - curl

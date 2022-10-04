@@ -1,0 +1,27 @@
+openapi: 3.0.2
+
+info:
+  title: Eclipse Kapua REST API - Authentication
+  version: '1.0'
+  contact:
+    name: Eclipse Kapua Dev Team
+    url: https://eclipse.org/kapua
+    email: kapua-dev@eclipse.org
+  license:
+    name: Eclipse Public License 2.0
+    url: https://www.eclipse.org/legal/epl-2.0
+
+paths:
+  /authentication/logout:
+    post:
+      tags:
+        - Authentication
+      summary: Logout
+      operationId: authenticationLogout
+      responses:
+        204:
+          description: Logout Successful
+        401:
+          $ref: '../openapi.yaml#/components/responses/unauthenticated'
+        500:
+          $ref: '../openapi.yaml#/components/responses/kapuaError'

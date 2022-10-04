@@ -1,0 +1,166 @@
+#!/bin/bash
+###############################################################################
+# Copyright (c) 2017, 2022 Red Hat Inc and others
+#
+# This program and the accompanying materials are made
+# available under the terms of the Eclipse Public License 2.0
+# which is available at https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#     Red Hat Inc - initial API and implementation
+#     Eurotech
+###############################################################################
+
+set -e
+
+if [ ! -f /opt/jboss/keycloak/standalone/data/first-run ]; then
+  REALM_NAME="kapua"
+  KC=/opt/jboss/keycloak/bin/kcadm.sh
+
+  echo "Kapua Keycloak Configuration:"
+  echo "    Kapua Console URL: $KAPUA_CONSOLE_URL"
+  echo "    Keycloak Realm: $REALM_NAME"
+  echo "    Keycloak Admin User: $KEYCLOAK_USER"
+  echo ""
+
+  #
+  # Start and wait Keycloak
+  echo "Starting Keycloak..."
+  /opt/jboss/tools/docker-entrypoint.sh -b localhost &
+
+  while ! curl -sf http://localhost:8080/auth; do
+    echo "Waiting for keycloak to come up..."
+    sleep 5
+  done
+  echo "Starting Keycloak... DONE!"
+  echo ""
+
+  #
+  # Keycloak Admin credential configuration
+  echo "Configuring Keycloak admin credentials..."
+  $KC config credentials \
+        --server http://localhost:8080/auth \
+        --realm master \
+        --user "$KEYCLOAK_USER" \
+        --password "$KEYCLOAK_PASSWORD" ||
+  {
+    echo "Configuring Keycloak admin credentials... ERROR!";
+    exit 1
+  }
+  echo "Configuring Keycloak admin credentials... DONE!"
+  echo ""
+
+
+  #
+  # Kapua Realm configuration
+  echo "Creating ${REALM_NAME} Keycloak realm..."
+
+  # Checking SMTP enablement
+  if test -n "$SMTP_HOST" && test -n "$SMTP_USER" && test -n "$SMTP_PASSWORD" && test -n "$SMTP_FROM"; then
+
+    echo "    SMTP: configured"
+    echo "    SMTP Host: ${SMTP_HOST}"
+    echo "    SMTP User: ${SMTP_USER}"
+    echo "    SMTP From: ${SMTP_FROM}"
+    echo "    SMTP SSL: ${SMTP_ENABLE_SSL}"
+    echo ""
+
+    $KC create realms \
+      -s realm=${REALM_NAME} \
+      -s enabled=true \
+      -s "smtpServer.host=${SMTP_HOST}" \
+      ${SMTP_PORT:+-s "smtpServer.port=${SMTP_PORT}"} \
+      -s "smtpServer.user=${SMTP_USER}" \
+      -s "smtpServer.password=${SMTP_PASSWORD}" \
+      -s "smtpServer.from=${SMTP_FROM}" \
+      ${SMTP_ENABLE_SSL:+-s "smtpServer.ssl=${SMTP_ENABLE_SSL}"} \
+      -f - << EOF
+      {
+          "displayName": "Eclipse Kapua",
+          "registrationAllowed": true,
+          "registrationEmailAsUsername": true,
+          "rememberMe": true,
+          "verifyEmail": true,
+          "resetPasswordAllowed": true,
+          "smtpServer": {
+             "auth": true,
+             "starttls": true
+          }
+       }
+EOF
+  else
+
+    echo "    SMTP: default"
+    $KC create realms \
+      -s realm=${REALM_NAME} \
+      -s enabled=true \
+      -f - << EOF
+      {
+          "displayName": "Eclipse Kapua",
+          "smtpServer": {
+             "auth": true,
+             "starttls": true
+          }
+       }
+EOF
+  fi
+  echo "Creating ${REALM_NAME} Keycloak realm... DONE!"
+  echo ""
+
+  #
+  # Keycloak client creation for Kapua Web Admin Console
+  echo "Creating Kapua Web Admin Console client..."
+
+  $KC create clients \
+    -r ${REALM_NAME} \
+    -s "redirectUris=[\"${KAPUA_CONSOLE_URL}/*\"]" \
+    -f - << EOF
+    {
+        "clientId": "console",
+        "name": "Kapua Web Admin Console",
+        "publicClient": true,
+        "protocolMappers": [ {
+           "name": "console",
+           "protocol": "openid-connect",
+           "protocolMapper": "oidc-audience-mapper",
+           "config": {
+              "access.token.claim": "true",
+              "included.custom.audience": "console"
+           }
+        } ]
+    }
+EOF
+  echo "Creating Kapua Web Admin Console client... DONE! "
+  echo ""
+
+  #
+  # Creating SSO user for Kapua keycloak realm
+  SSO_USER="sso-user"
+  SSO_USER_PASSWORD="sso-password"
+  echo "Creating ${SSO_USER} user for ${REALM_NAME} realm..."
+
+  $KC create users -r ${REALM_NAME} -s username=${SSO_USER} -s enabled=true
+  $KC set-password -r ${REALM_NAME} --username ${SSO_USER} --new-password ${SSO_USER_PASSWORD}
+
+  echo "Creating ${SSO_USER} user for ${REALM_NAME} realm... DONE!"
+  echo ""
+
+  #
+  # Keycloak Shutdown
+  echo "Shutting down Keycloak after first init..."
+  touch /opt/jboss/keycloak/standalone/data/first-run
+
+  sleep 1
+
+  kill %1
+  wait %1
+
+  echo "Shutting down Keycloak after first init... DONE!"
+  echo ""
+fi
+
+echo "Starting Keycloak!"
+exec /opt/jboss/tools/docker-entrypoint.sh $@
+exit $?

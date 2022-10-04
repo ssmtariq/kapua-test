@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright (c) 2016, 2022 Eurotech and/or its affiliates and others
+
+    This program and the accompanying materials are made
+    available under the terms of the Eclipse Public License 2.0
+    which is available at https://www.eclipse.org/legal/epl-2.0/
+
+    SPDX-License-Identifier: EPL-2.0
+
+    Contributors:
+        Eurotech - initial API and implementation
+-->
+<assembly
+    xmlns="http://maven.apache.org/ASSEMBLY/2.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
+
+    <id>kapua-cucumber-report</id>
+
+    <formats>
+        <format>dir</format>
+    </formats>
+
+    <includeBaseDirectory>false</includeBaseDirectory>
+
+    <fileSets>
+        <fileSet>
+            <outputDirectory>.</outputDirectory>
+            <directory>src/main/resources/html/cucumber</directory>
+        </fileSet>
+
+        <fileSet>
+            <outputDirectory>account-service</outputDirectory>
+            <directory>../../service/account/test/target/cucumber</directory>
+        </fileSet>
+
+        <fileSet>
+            <outputDirectory>user-service</outputDirectory>
+            <directory>../../service/user/test/target/cucumber</directory>
+        </fileSet>
+
+        <fileSet>
+            <outputDirectory>device-registry-service</outputDirectory>
+            <directory>../../service/device/registry/test/target/cucumber</directory>
+        </fileSet>
+
+        <fileSet>
+            <outputDirectory>job-service</outputDirectory>
+            <directory>../../service/job/test/target/cucumber</directory>
+        </fileSet>
+
+        <fileSet>
+            <outputDirectory>tag-service</outputDirectory>
+            <directory>../../service/tag/test/target/cucumber</directory>
+        </fileSet>
+
+        <fileSet>
+            <outputDirectory>authorization-service</outputDirectory>
+            <directory>../../qa/integration/target/cucumber</directory>
+        </fileSet>
+
+        <fileSet>
+            <outputDirectory>user-service-i9n</outputDirectory>
+            <directory>../../qa/integration/target/cucumber</directory>
+        </fileSet>
+
+        <fileSet>
+            <outputDirectory>user-service-lockout-i9n</outputDirectory>
+            <directory>../../qa/integration/target/cucumber</directory>
+        </fileSet>
+
+        <fileSet>
+            <outputDirectory>device-service-i9n</outputDirectory>
+            <directory>../../qa/integration/target/cucumber</directory>
+        </fileSet>
+
+        <fileSet>
+            <outputDirectory>device-lifecycle-service-i9n</outputDirectory>
+            <directory>../../qa/integration/target/cucumber</directory>
+        </fileSet>
+
+        <fileSet>
+            <outputDirectory>connection-user-coupling-i9n</outputDirectory>
+            <directory>../../qa/integration/target/cucumber</directory>
+        </fileSet>
+
+        <fileSet>
+            <outputDirectory>device-broker-i9n</outputDirectory>
+            <directory>../../qa/integration/target/cucumber</directory>
+        </fileSet>
+
+        <fileSet>
+            <outputDirectory>device-broker-ipConfigFile-i9n</outputDirectory>
+            <directory>../../qa/integration/target/cucumber</directory>
+        </fileSet>
+
+        <fileSet>
+            <outputDirectory>device-broker-ipSysEnv-i9n</outputDirectory>
+            <directory>../../qa/integration/target/cucumber</directory>
+        </fileSet>
+
+        <fileSet>
+            <outputDirectory>device-broker-ipUndefined-i9n</outputDirectory>
+            <directory>../../qa/integration/target/cucumber</directory>
+        </fileSet>
+
+        <fileSet>
+            <outputDirectory>device-data-i9n</outputDirectory>
+            <directory>../../qa/integration/target/cucumber</directory>
+        </fileSet>
+
+        <fileSet>
+            <outputDirectory>device-broker-ACL-i9n</outputDirectory>
+            <directory>../../qa/integration/target/cucumber</directory>
+        </fileSet>
+
+        <fileSet>
+            <outputDirectory>device-manager-ACL-i9n</outputDirectory>
+            <directory>../../qa/integration/target/cucumber</directory>
+        </fileSet>
+
+        <fileSet>
+            <outputDirectory>datastore-transport-i9n</outputDirectory>
+            <directory>../../qa/integration/target/cucumber</directory>
+        </fileSet>
+
+        <fileSet>
+            <outputDirectory>datastore-rest-i9n</outputDirectory>
+            <directory>../../qa/integration/target/cucumber</directory>
+        </fileSet>
+
+        <fileSet>
+            <outputDirectory>job-engine-online-device</outputDirectory>
+            <directory>../../qa/integration/target/cucumber</directory>
+        </fileSet>
+
+        <fileSet>
+            <outputDirectory>job-engine-offline-device</outputDirectory>
+            <directory>../../qa/integration/target/cucumber</directory>
+        </fileSet>
+        </fileSets>
+
+</assembly>

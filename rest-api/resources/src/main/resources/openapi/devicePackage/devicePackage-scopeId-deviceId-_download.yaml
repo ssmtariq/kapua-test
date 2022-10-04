@@ -1,0 +1,81 @@
+openapi: 3.0.2
+
+info:
+  title: Eclipse Kapua REST API - Package
+  version: '1.0'
+  contact:
+    name: Eclipse Kapua Dev Team
+    url: https://eclipse.org/kapua
+    email: kapua-dev@eclipse.org
+  license:
+    name: Eclipse Public License 2.0
+    url: https://www.eclipse.org/legal/epl-2.0
+
+paths:
+  /{scopeId}/devices/{deviceId}/packages/_download:
+    post:
+      tags:
+        - Device Management - Package
+      summary: Download and install a Package
+      operationId: devicePackageDownload
+      parameters:
+        - $ref: '../openapi.yaml#/components/parameters/scopeId'
+        - $ref: '../device/device.yaml#/components/parameters/deviceId'
+        - $ref: '../device/device.yaml#/components/parameters/timeout'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: './devicePackage.yaml#/components/schemas/devicePackageDownloadRequest'
+            examples:
+              basic:
+                summary: Basic
+                description: A request with basic options
+                value:
+                  uri: https://download.eclipse.org/kura/releases/4.1.0/org.eclipse.kura.demo.heater_1.0.500.dp
+                  name: heater
+                  version: 1.0.500
+                  install: true
+                  reboot: false
+              complete:
+                summary: Complete
+                description: A request with all available options used
+                value:
+                  uri: https://download.eclipse.org/kura/releases/4.1.0/org.eclipse.kura.demo.heater_1.0.500.dp
+                  name: heater
+                  version: 1.0.500
+                  username: username
+                  password: password
+                  fileHash: MD5:0d04154164145cd6b2167fdd457ed28f
+                  fileType: DEPLOYMENT_PACKAGE
+                  install: true
+                  reboot: false
+                  rebootDelay: 0
+                  advancedOptions:
+                    restart: false
+                    blockSize: 128
+                    blockDelay: 0
+                    blockTimeout: 5000
+                    notifyBlockSize: 256
+                    installVerifyURI: https://download.eclipse.org/kura/releases/4.1.0/org.eclipse.kura.demo.heater_1.0.500.verifier.sh
+        required: true
+      responses:
+        200:
+          description: The corresponding Device Management Operation to track the progress of the Device Package Download Request
+          content:
+            application/json:
+              schema:
+                $ref: '../deviceOperation/deviceOperation.yaml#/components/schemas/deviceOperation'
+        204:
+          description: |
+            The Package Install request has been successfully received. However, this does NOT mean that the package has been successfully installed, since the Package Install
+            is an asynchronous operation and may still be in progress. APIs are available at `device/{deviceId}/operations` and `device/{deviceId}/operations/{operationId}/notifications`
+            to track asynchronous operations.
+        401:
+          $ref: '../openapi.yaml#/components/responses/unauthenticated'
+        403:
+          $ref: '../openapi.yaml#/components/responses/subjectUnauthorized'
+        404:
+          $ref: '../openapi.yaml#/components/responses/entityNotFound'
+        500:
+          $ref: '../openapi.yaml#/components/responses/kapuaError'

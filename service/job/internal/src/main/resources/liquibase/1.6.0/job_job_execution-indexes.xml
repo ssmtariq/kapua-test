@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright (c) 2021, 2022 Eurotech and/or its affiliates and others
+
+    This program and the accompanying materials are made
+    available under the terms of the Eclipse Public License 2.0
+    which is available at https://www.eclipse.org/legal/epl-2.0/
+
+    SPDX-License-Identifier: EPL-2.0
+
+    Contributors:
+        Eurotech - initial API and implementation
+ -->
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd"
+        logicalFilePath="KapuaDB/changelog-job-1.6.0.xml">
+
+    <changeSet id="changelog-job_execution-1.6.0-indexes" author="eurotech">
+        <createIndex tableName="job_job_execution" indexName="idx_jobExecution_scopeId_jobId_startedOn">
+            <column name="scope_id"/>
+            <column name="job_id"/>
+            <column name="started_on"/>
+        </createIndex>
+        <createIndex tableName="job_job_execution" indexName="idx_jobExecution_scopeId_jobId_endedOn">
+            <column name="scope_id"/>
+            <column name="job_id"/>
+            <column name="ended_on"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
