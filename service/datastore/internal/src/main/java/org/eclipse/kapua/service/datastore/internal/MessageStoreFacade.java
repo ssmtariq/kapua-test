@@ -292,8 +292,8 @@ public final class MessageStoreFacade extends AbstractRegistryFacade {
 
         idsQuery.setFetchAttributes(Collections.singletonList("timestamp"));
         System.out.println("#New Implementation data -----------------------");
-        Date date = getElasticsearchClient().find(typeDescriptor, idsQuery, Date.class);
-        System.out.println(date.toString());
+        DatastoreMessage datastoreMessage2 = getElasticsearchClient().find(typeDescriptor, idsQuery, DatastoreMessage.class);
+        System.out.println(datastoreMessage2.toString());
 
         return getElasticsearchClient().find(typeDescriptor, idsQuery, DatastoreMessage.class);
     }
