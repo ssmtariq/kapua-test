@@ -13,6 +13,7 @@
  *******************************************************************************/
 package org.eclipse.kapua.service.datastore.internal.model;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.eclipse.kapua.message.KapuaPayload;
 import org.eclipse.kapua.message.device.data.KapuaDataChannel;
 import org.eclipse.kapua.message.internal.KapuaMessageImpl;
@@ -53,4 +54,20 @@ public class DatastoreMessageImpl extends KapuaMessageImpl<KapuaDataChannel, Kap
         this.timestamp = timestamp;
     }
 
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("id", getId())
+                .append("datastoreId", getDatastoreId())
+                .append("timestamp", getTimestamp())
+                .append("deviceId", getDeviceId().toStringId())
+                .append("clientId", getClientId())
+                .append("receivedOn", getReceivedOn())
+                .append("sentOn", getSentOn())
+                .append("capturedOn", getCapturedOn())
+                .append("position", getPosition().toDisplayString())
+                .append("channel", getChannel().toPathString())
+                .append("payload", getPayload().toDisplayString())
+                .toString();
+    }
 }

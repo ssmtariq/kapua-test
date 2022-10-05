@@ -207,23 +207,26 @@ Feature: Datastore tests
     Given I login as user with name "kapua-sys" and password "kapua-password"
     And I select account "kapua-sys"
     And The device "test-device-1"
-    Given I prepare a number of messages with the following details and remember the list as "TestMessages1"
+    Given I prepare 1000 messages with the following details and remember the list as TestMessages1...n
       | topic                  |
       | delete/by/query/test/1 |
-    And The device "test-device-2"
-    Given I prepare a number of messages with the following details and remember the list as "TestMessages2"
-      | topic                   |
-      | delete/by/query/tests/2 |
-    And The device "test-device-3"
-    Given I prepare a number of messages with the following details and remember the list as "TestMessages3"
-      | topic                  |
-      | delete/by/query/test/3 |
-    Given I prepare a number of messages with the following details and remember the list as "TestMessages4"
-      | topic                  |
-      | delete/by/query/test/3 |
-    Given I prepare a number of messages with the following details and remember the list as "TestMessages5"
-      | topic                  |
-      | delete/by/query/test/3 |
+#    Given I prepare a number of messages with the following details and remember the list as "TestMessages1"
+#      | topic                  |
+#      | delete/by/query/test/1 |
+#    And The device "test-device-2"
+#    Given I prepare a number of messages with the following details and remember the list as "TestMessages2"
+#      | topic                   |
+#      | delete/by/query/tests/2 |
+#    And The device "test-device-3"
+#    Given I prepare a number of messages with the following details and remember the list as "TestMessages3"
+#      | topic                  |
+#      | delete/by/query/test/3 |
+#    Given I prepare a number of messages with the following details and remember the list as "TestMessages4"
+#      | topic                  |
+#      | delete/by/query/test/3 |
+#    Given I prepare a number of messages with the following details and remember the list as "TestMessages5"
+#      | topic                  |
+#      | delete/by/query/test/3 |
     Then I store the messages from list "TestMessages1" and remember the IDs as "StoredMessageIDs1"
     Then I store the messages from list "TestMessages2" and remember the IDs as "StoredMessageIDs2"
     Then I store the messages from list "TestMessages3" and remember the IDs as "StoredMessageIDs3"

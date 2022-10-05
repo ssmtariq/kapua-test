@@ -490,6 +490,16 @@ public class DatastoreSteps extends TestBase {
         stepData.put(listKey, tmpList);
     }
 
+    @Given("I prepare 1000 messages with the following details and remember the list as TestMessages1...n")
+    public void prepareThousandListOfMessagesWithDifferentTopics(List<CucTopic> topics) throws Exception {
+        for(int i =1; i<=10; i++){
+            String listKey = "TestMessages";
+            listKey+=i;
+            System.out.println("Preparing message: "+listKey);
+            prepareAListOfMessagesWithDifferentTopics(listKey, topics);
+        }
+    }
+
     @Given("I prepare a number of messages in the specified ranges and remember the list as {string}")
     public void prepareAListOfMessagesInTheSpecifiedRanges(String listKey, List<CucMessageRange> messages) throws Exception {
         List<KapuaDataMessage> tmpList = new ArrayList<>();
