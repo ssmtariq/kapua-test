@@ -210,52 +210,15 @@ Feature: Datastore tests
     Given I prepare 1000 messages with the following details and remember the list as TestMessages1...n
       | topic                  |
       | delete/by/query/test/1 |
-#    Given I prepare a number of messages with the following details and remember the list as "TestMessages1"
-#      | topic                  |
-#      | delete/by/query/test/1 |
-#    And The device "test-device-2"
-#    Given I prepare a number of messages with the following details and remember the list as "TestMessages2"
-#      | topic                   |
-#      | delete/by/query/tests/2 |
-#    And The device "test-device-3"
-#    Given I prepare a number of messages with the following details and remember the list as "TestMessages3"
-#      | topic                  |
-#      | delete/by/query/test/3 |
-#    Given I prepare a number of messages with the following details and remember the list as "TestMessages4"
-#      | topic                  |
-#      | delete/by/query/test/3 |
-#    Given I prepare a number of messages with the following details and remember the list as "TestMessages5"
-#      | topic                  |
-#      | delete/by/query/test/3 |
-    Then I store the messages from list "TestMessages1" and remember the IDs as "StoredMessageIDs1"
-    Then I store the messages from list "TestMessages2" and remember the IDs as "StoredMessageIDs2"
-    Then I store the messages from list "TestMessages3" and remember the IDs as "StoredMessageIDs3"
-    Then I store the messages from list "TestMessages4" and remember the IDs as "StoredMessageIDs4"
-    Then I store the messages from list "TestMessages5" and remember the IDs as "StoredMessageIDs5"
-    And I refresh all indices
-    When I search for messages with IDs from the list "StoredMessageIDs1" and store them in the list "StoredMessagesList"
-    Then The datastore messages in list "StoredMessagesList" matches the prepared messages in list "TestMessages1"
-    When I pick the ID number 0 from the list "StoredMessageIDs1" and remember it as "SelectedMessageId"
-    When I delete the datastore message with ID "SelectedMessageId"
+    Then I store the messages from list TestMessages1..n and remember the IDs as StoredMessageIDs1..n
+
     And I refresh all indices
 
-    When I pick the ID number 0 from the list "StoredMessageIDs2" and remember it as "SelectedMessageId2"
-    When I delete the datastore message with ID "SelectedMessageId2"
+    When I pick the ID number 0 from the list StoredMessageIDs1..n and remember it as SelectedMessageId1..n
+    When I delete the datastore message with ID SelectedMessageId1..n
     And I refresh all indices
 
-    When I pick the ID number 0 from the list "StoredMessageIDs3" and remember it as "SelectedMessageId3"
-    When I delete the datastore message with ID "SelectedMessageId3"
-    And I refresh all indices
-
-    When I pick the ID number 0 from the list "StoredMessageIDs4" and remember it as "SelectedMessageId4"
-    When I delete the datastore message with ID "SelectedMessageId4"
-    And I refresh all indices
-
-    When I pick the ID number 0 from the list "StoredMessageIDs5" and remember it as "SelectedMessageId5"
-    When I delete the datastore message with ID "SelectedMessageId5"
-    And I refresh all indices
-
-    When I search for a data message with ID "SelectedMessageId" and remember it as "ShouldBeNull"
+    When I search for a data message with ID "SelectedMessageId1" and remember it as "ShouldBeNull"
     Then Message "ShouldBeNull" is null
     And I delete all indices
 

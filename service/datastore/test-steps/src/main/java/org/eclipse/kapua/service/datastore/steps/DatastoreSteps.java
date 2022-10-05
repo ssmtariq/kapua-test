@@ -679,6 +679,15 @@ public class DatastoreSteps extends TestBase {
         stepData.put(idListKey, tmpIdList);
     }
 
+    @Given("I store the messages from list TestMessages1..n and remember the IDs as StoredMessageIDs1..n")
+    public void insertRandomMessagesIntoDatastore() throws KapuaException {
+        for(int i=1; i<=10; i++){
+            String msgListKey = "TestMessages"+i;
+            String idListKey = "StoredMessageIDs"+i;
+            insertRandomMessagesIntoDatastore(msgListKey, idListKey);
+        }
+    }
+
     @Given("I store the messages from list {string} with the server time and remember the IDs as {string}")
     public void insertRandomMessagesIntoDatastoreWithCurrentTimestamps(String msgListKey, String idListKey) throws KapuaException {
         List<KapuaDataMessage> tmpMsgList = (List<KapuaDataMessage>) stepData.get(msgListKey);
@@ -708,9 +717,18 @@ public class DatastoreSteps extends TestBase {
 
     @When("I delete the datastore message with ID {string}")
     public void deleteDatastoreMessage(String idKey) throws KapuaException {
+        System.out.println("The idKey to delete message is: "+idKey);
         Account account = (Account) stepData.get(LAST_ACCOUNT);
         StorableId msgId = (StorableId) stepData.get(idKey);
         messageStoreService.delete(account.getId(), msgId);
+    }
+
+    @When("I delete the datastore message with ID SelectedMessageId1..n")
+    public void deleteDatastoreMessages() throws KapuaException {
+        for(int i=1; i<=10; i++){
+            String idKey = "SelectedMessageId"+i;
+            deleteDatastoreMessage(idKey);
+        }
     }
 
     @When("I pick the ID number {int} from the list {string} and remember it as {string}")
@@ -718,6 +736,15 @@ public class DatastoreSteps extends TestBase {
         List<StorableId> msgIds = (List<StorableId>) stepData.get(lstKey);
         StorableId tmpId = msgIds.get(index);
         stepData.put(idKey, tmpId);
+    }
+
+    @When("I pick the ID number {int} from the list StoredMessageIDs1..n and remember it as SelectedMessageId1..n")
+    public void pickAMessageIdFromAllList(int index) {
+        for(int i=1; i<=10; i++){
+            String lstKey = "StoredMessageIDs"+i;
+            String idKey = "SelectedMessageId"+i;
+            pickAMessageIdFromAList(index, lstKey, idKey);
+        }
     }
 
     @When("I pick the ID of the channel number {int} in the list {string} and remember it as {string}")
