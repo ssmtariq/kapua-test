@@ -13,6 +13,7 @@
 package org.eclipse.kapua.service.datastore.internal;
 
 import com.codahale.metrics.Counter;
+import org.apache.http.HttpHost;
 import org.eclipse.kapua.KapuaException;
 import org.eclipse.kapua.KapuaIllegalArgumentException;
 import org.eclipse.kapua.commons.cache.LocalCache;
@@ -66,9 +67,18 @@ import org.eclipse.kapua.service.storable.model.id.StorableIdFactory;
 import org.eclipse.kapua.service.storable.model.query.StorableFetchStyle;
 import org.eclipse.kapua.service.storable.model.query.predicate.IdsPredicate;
 import org.eclipse.kapua.service.storable.model.query.predicate.StorablePredicateFactory;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.search.SearchType;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.Collections;
 import java.util.Map;
@@ -272,6 +282,9 @@ public final class MessageStoreFacade extends AbstractRegistryFacade {
     public DatastoreMessage findModified(KapuaId scopeId, StorableId id, StorableFetchStyle fetchStyle)
             throws KapuaIllegalArgumentException, ClientException {
 
+        System.out.println("Query Param SCOPE_ID="+scopeId.getId());
+        System.out.println("Query Param ID="+id.toString());
+
         ArgumentValidator.notNull(scopeId, SCOPE_ID);
         ArgumentValidator.notNull(id, "id");
         ArgumentValidator.notNull(fetchStyle, "fetchStyle");
@@ -295,27 +308,34 @@ public final class MessageStoreFacade extends AbstractRegistryFacade {
         DatastoreMessage datastoreMessage2 = getElasticsearchClient().find(typeDescriptor, idsQuery, DatastoreMessage.class);
         System.out.println(datastoreMessage2.toString());
 
-        return getElasticsearchClient().find(typeDescriptor, idsQuery, DatastoreMessage.class);
+        return getElasticsearchClient().findField("timestamp", typeDescriptor, idsQuery, DatastoreMessage.class);
     }
 
-//    public Date findTimestamp(KapuaId scopeId, StorableId id, StorableFetchStyle fetchStyle)
-//            throws KapuaIllegalArgumentException, ClientException {
-//        RestHighLevelClient esClient = new RestHighLevelClient(
-//                RestClient.builder(new HttpHost("localhost", 9200, "http")));
-//        //Prepare search request
-//        SearchRequest searchRequest = new SearchRequest().scroll(new TimeValue(100));
-//        searchRequest.indices("ES_INDEX");
-//        /* Set elasticsearch query for the request */
-//        searchRequest.source(new SearchSourceBuilder());
-//
-//        // Query elastic search
-//        try {
-//            SearchResponse searchResponse = getElasticsearchClient().search(searchRequest, RequestOptions.DEFAULT);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//        return null;
-//    }
+    public Date findTimestamp(KapuaId scopeId, StorableId id, StorableFetchStyle fetchStyle)
+            throws KapuaIllegalArgumentException, ClientException {
+        String indexName = SchemaUtil.getDataIndexName(scopeId);
+        RestHighLevelClient esClient = new RestHighLevelClient(
+                RestClient.builder(new HttpHost("localhost", 9200, "http")));
+
+        //Prepare search request
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.searchType(SearchType.DFS_QUERY_THEN_FETCH);
+        searchRequest.indices(indexName);
+
+        /* Set elasticsearch query for the request */
+        SearchSourceBuilder builder = new SearchSourceBuilder()
+                .postFilter(QueryBuilders.rangeQuery("age").from(5).to(15));
+
+        searchRequest.source(builder);
+
+        // Query elastic search
+        try {
+            SearchResponse searchResponse = esClient.search(searchRequest, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
 
     /**
      * Find messages matching the given query

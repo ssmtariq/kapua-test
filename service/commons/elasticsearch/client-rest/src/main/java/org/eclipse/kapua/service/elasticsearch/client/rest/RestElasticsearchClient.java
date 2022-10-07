@@ -57,6 +57,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -247,11 +248,21 @@ public class RestElasticsearchClient extends AbstractElasticsearchClient<RestCli
     }
 
     @Override
+    public <T> T findField(String field, TypeDescriptor typeDescriptor, Object query, Class<T> clazz) throws ClientException {
+        ResultList<T> result = queryField(field, typeDescriptor, query, clazz);
+
+        return result.getResult().isEmpty() ? null : result.getResult().get(0);
+    }
+
+    @Override
     public <T> ResultList<T> query(TypeDescriptor typeDescriptor, Object query, Class<T> clazz) throws ClientException {
         JsonNode queryJsonNode = getModelConverter().convertQuery(query);
         LOG.debug(QUERY_CONVERTED_QUERY, queryJsonNode);
 
         String json = writeRequestFromJsonNode(queryJsonNode);
+        System.out.println("### The final query as string RestElasticsearchClient.query() : "+json);
+        System.out.println("### The index is RestElasticsearchClient.query() : "+typeDescriptor.getIndex());
+        System.out.println("### The Request Endpoint: "+ElasticsearchResourcePaths.search(typeDescriptor));
 
         long totalCount = 0;
         ArrayNode resultsNode = null;
@@ -288,6 +299,59 @@ public class RestElasticsearchClient extends AbstractElasticsearchClient<RestCli
                 object.put(QueryConverter.QUERY_FETCH_STYLE_KEY, queryFetchStyle);
 
                 resultList.add(getModelContext().unmarshal(clazz, object));
+            }
+        }
+        return resultList;
+    }
+
+    @Override
+    public <T> ResultList<T> queryField(String field, TypeDescriptor typeDescriptor, Object query, Class<T> clazz) throws ClientException {
+        JsonNode queryJsonNode = getModelConverter().convertQuery(query);
+        LOG.debug(QUERY_CONVERTED_QUERY, queryJsonNode);
+
+        String json = writeRequestFromJsonNode(queryJsonNode);
+        System.out.println("### The final query as string RestElasticsearchClient.query() : "+json);
+        System.out.println("### The index is RestElasticsearchClient.query() : "+typeDescriptor.getIndex());
+        System.out.println("### The Request Endpoint: "+ElasticsearchResourcePaths.search(typeDescriptor));
+
+        String includeQuery=String.format("includes\":[\"%s\"]",field);
+        String queryToBeReplaced = "includes\":[\"*\"]";
+
+//        json = json.replace(queryToBeReplaced,includeQuery);
+        System.out.println("### The MODIFIED query as string RestElasticsearchClient.query() : "+json);
+
+        long totalCount = 0;
+        ArrayNode resultsNode = null;
+        Request request = new Request(ElasticsearchKeywords.ACTION_GET, ElasticsearchResourcePaths.search(typeDescriptor));
+        request.setJsonEntity(json);
+        Response queryResponse = restCallTimeoutHandler(() -> getClient().performRequest(request), typeDescriptor.getIndex(), "QUERY");
+        System.out.println("RAW RESPONSE: "+queryResponse.toString());
+
+        if (isRequestSuccessful(queryResponse)) {
+            JsonNode responseNode = readResponseAsJsonNode(queryResponse);
+            System.out.println("Response As JsonNode: "+responseNode.textValue());
+            System.out.println("Response As JsonNode: "+responseNode);
+            System.out.println("Response As JsonNode: "+responseNode.asText());
+
+            JsonNode hitsNode = responseNode.path(ElasticsearchKeywords.KEY_HITS);
+            totalCount = hitsNode.path(ElasticsearchKeywords.KEY_TOTAL).path(ElasticsearchKeywords.KEY_VALUE).asLong();
+            if (totalCount > Integer.MAX_VALUE) {
+                throw new ClientException(ClientErrorCodes.ACTION_ERROR, CLIENT_HITS_MAX_VALUE_EXCEEDED);
+            }
+            resultsNode = ((ArrayNode) hitsNode.get(ElasticsearchKeywords.KEY_HITS));
+        } else if (!isRequestBadRequest(queryResponse) &&
+                !isRequestNotFound(queryResponse)) {
+            throw buildExceptionFromUnsuccessfulResponse("Query", queryResponse);
+        }
+
+        ResultList<T> resultList = new ResultList<>(totalCount);
+        if (resultsNode != null && !resultsNode.isEmpty()) {
+            int counter=1;
+            for (JsonNode result : resultsNode) {
+                System.out.println("Result in loop - "+counter+" : "+result.textValue());
+                System.out.println("Result in loop - "+counter+" : "+result);
+                Map<String, Object> object = objectMapper.convertValue(result.get(SchemaKeys.KEY_SOURCE), Map.class);
+                resultList.add(object.get(field));
             }
         }
         return resultList;
