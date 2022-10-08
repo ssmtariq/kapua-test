@@ -680,7 +680,7 @@ public class DatastoreSteps extends TestBase {
 
     @Given("I store those {int} messages from list TestMessages1..n and remember the IDs as StoredMessageIDs1..n")
     public void insertRandomMessagesIntoDatastore(int number) throws KapuaException {
-        for(int i=1; i<=10; i++){
+        for(int i=1; i<=number; i++){
             String msgListKey = "TestMessages"+i;
             String idListKey = "StoredMessageIDs"+i;
             insertRandomMessagesIntoDatastore(msgListKey, idListKey);
