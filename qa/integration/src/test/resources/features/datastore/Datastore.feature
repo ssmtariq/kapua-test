@@ -207,15 +207,15 @@ Feature: Datastore tests
     Given I login as user with name "kapua-sys" and password "kapua-password"
     And I select account "kapua-sys"
     And The device "test-device-1"
-    Given I prepare 1000 messages with the following details and remember the list as TestMessages1...n
+    Given I prepare 10 messages with the following details and remember the list as TestMessages1...n
       | topic                  |
       | delete/by/query/test/1 |
-    Then I store the messages from list TestMessages1..n and remember the IDs as StoredMessageIDs1..n
+    Then I store those 10 messages from list TestMessages1..n and remember the IDs as StoredMessageIDs1..n
 
     And I refresh all indices
 
-    When I pick the ID number 0 from the list StoredMessageIDs1..n and remember it as SelectedMessageId1..n
-    When I delete the datastore message with ID SelectedMessageId1..n
+    When I pick the ID number 0 from the list StoredMessageIDs1..10 and remember it as SelectedMessageId1..n
+    When I delete the datastore message with ID SelectedMessageId1..10
     And I refresh all indices
 
     When I search for a data message with ID "SelectedMessageId1" and remember it as "ShouldBeNull"

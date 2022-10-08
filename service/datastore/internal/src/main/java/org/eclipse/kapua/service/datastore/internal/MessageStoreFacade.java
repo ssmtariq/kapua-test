@@ -79,8 +79,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Date;
-import java.util.Collections;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -232,11 +232,11 @@ public final class MessageStoreFacade extends AbstractRegistryFacade {
         }
 
         // get the index by finding the object by id
-        DatastoreMessage messageToBeDeleted = findModified(scopeId, id, StorableFetchStyle.FIELDS);
-        if (messageToBeDeleted != null) {
+        Date timestamp = findModified(scopeId, id, StorableFetchStyle.FIELDS);
+        if (timestamp != null) {
             Metadata schemaMetadata = null;
             try {
-                schemaMetadata = mediator.getMetadata(scopeId, messageToBeDeleted.getTimestamp().getTime());
+                schemaMetadata = mediator.getMetadata(scopeId, timestamp.getTime());
             } catch (KapuaException e) {
                 LOG.warn("Retrieving metadata error", e);
             }
@@ -279,7 +279,7 @@ public final class MessageStoreFacade extends AbstractRegistryFacade {
         return getElasticsearchClient().find(typeDescriptor, idsQuery, DatastoreMessage.class);
     }
 
-    public DatastoreMessage findModified(KapuaId scopeId, StorableId id, StorableFetchStyle fetchStyle)
+    public Date findModified(KapuaId scopeId, StorableId id, StorableFetchStyle fetchStyle)
             throws KapuaIllegalArgumentException, ClientException {
 
         System.out.println("Query Param SCOPE_ID="+scopeId.getId());
@@ -298,17 +298,15 @@ public final class MessageStoreFacade extends AbstractRegistryFacade {
 
         String indexName = SchemaUtil.getDataIndexName(scopeId);
         TypeDescriptor typeDescriptor = new TypeDescriptor(indexName, MessageSchema.MESSAGE_TYPE_NAME);
-
-        System.out.println("#Old Implementation data -----------------------");
-        DatastoreMessage datastoreMessage = getElasticsearchClient().find(typeDescriptor, idsQuery, DatastoreMessage.class);
-        System.out.println(datastoreMessage.toString());
-
-        idsQuery.setFetchAttributes(Collections.singletonList("timestamp"));
-        System.out.println("#New Implementation data -----------------------");
-        DatastoreMessage datastoreMessage2 = getElasticsearchClient().find(typeDescriptor, idsQuery, DatastoreMessage.class);
-        System.out.println(datastoreMessage2.toString());
-
-        return getElasticsearchClient().findField("timestamp", typeDescriptor, idsQuery, DatastoreMessage.class);
+        String timestamp = (String) getElasticsearchClient().findTimestamp("timestamp", typeDescriptor, idsQuery);
+        System.out.println("TIMESTAMP FOUND: "+timestamp);
+        Date date;
+        try {
+            date = KapuaDateUtils.parseDate(timestamp);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        return date;
     }
 
     public Date findTimestamp(KapuaId scopeId, StorableId id, StorableFetchStyle fetchStyle)

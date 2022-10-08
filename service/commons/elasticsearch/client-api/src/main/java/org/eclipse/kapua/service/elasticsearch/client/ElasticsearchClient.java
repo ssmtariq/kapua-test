@@ -168,7 +168,7 @@ public interface ElasticsearchClient<C extends Closeable> {
      */
     <T> T find(TypeDescriptor typeDescriptor, Object query, Class<T> clazz) throws ClientException;
 
-    <T> T findField(String field, TypeDescriptor typeDescriptor, Object query, Class<T> clazz) throws ClientException;
+    Object findTimestamp(String field, TypeDescriptor typeDescriptor, Object query) throws ClientException;
 
     /**
      * Finds by query.
@@ -181,8 +181,6 @@ public interface ElasticsearchClient<C extends Closeable> {
      * @since 1.0.0
      */
     <T> ResultList<T> query(TypeDescriptor typeDescriptor, Object query, Class<T> clazz) throws ClientException;
-
-    <T> ResultList<T> queryField(String field, TypeDescriptor typeDescriptor, Object query, Class<T> clazz) throws ClientException;
 
     /**
      * Counts by query.

@@ -57,7 +57,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -247,11 +246,8 @@ public class RestElasticsearchClient extends AbstractElasticsearchClient<RestCli
         return result.getResult().isEmpty() ? null : result.getResult().get(0);
     }
 
-    @Override
-    public <T> T findField(String field, TypeDescriptor typeDescriptor, Object query, Class<T> clazz) throws ClientException {
-        ResultList<T> result = queryField(field, typeDescriptor, query, clazz);
-
-        return result.getResult().isEmpty() ? null : result.getResult().get(0);
+    public Object findTimestamp(String field, TypeDescriptor typeDescriptor, Object query) throws ClientException {
+        return queryField(field, typeDescriptor, query);
     }
 
     @Override
@@ -304,8 +300,7 @@ public class RestElasticsearchClient extends AbstractElasticsearchClient<RestCli
         return resultList;
     }
 
-    @Override
-    public <T> ResultList<T> queryField(String field, TypeDescriptor typeDescriptor, Object query, Class<T> clazz) throws ClientException {
+    public Object queryField(String field, TypeDescriptor typeDescriptor, Object query) throws ClientException {
         JsonNode queryJsonNode = getModelConverter().convertQuery(query);
         LOG.debug(QUERY_CONVERTED_QUERY, queryJsonNode);
 
@@ -317,7 +312,7 @@ public class RestElasticsearchClient extends AbstractElasticsearchClient<RestCli
         String includeQuery=String.format("includes\":[\"%s\"]",field);
         String queryToBeReplaced = "includes\":[\"*\"]";
 
-//        json = json.replace(queryToBeReplaced,includeQuery);
+        json = json.replace(queryToBeReplaced,includeQuery);
         System.out.println("### The MODIFIED query as string RestElasticsearchClient.query() : "+json);
 
         long totalCount = 0;
@@ -344,17 +339,16 @@ public class RestElasticsearchClient extends AbstractElasticsearchClient<RestCli
             throw buildExceptionFromUnsuccessfulResponse("Query", queryResponse);
         }
 
-        ResultList<T> resultList = new ResultList<>(totalCount);
+        Map<String, Object> object = null;
         if (resultsNode != null && !resultsNode.isEmpty()) {
             int counter=1;
             for (JsonNode result : resultsNode) {
                 System.out.println("Result in loop - "+counter+" : "+result.textValue());
                 System.out.println("Result in loop - "+counter+" : "+result);
-                Map<String, Object> object = objectMapper.convertValue(result.get(SchemaKeys.KEY_SOURCE), Map.class);
-                resultList.add(object.get(field));
+                object = objectMapper.convertValue(result.get(SchemaKeys.KEY_SOURCE), Map.class);
             }
         }
-        return resultList;
+        return object.get(field);
     }
 
     @Override

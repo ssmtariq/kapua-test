@@ -490,9 +490,9 @@ public class DatastoreSteps extends TestBase {
         stepData.put(listKey, tmpList);
     }
 
-    @Given("I prepare 1000 messages with the following details and remember the list as TestMessages1...n")
-    public void prepareThousandListOfMessagesWithDifferentTopics(List<CucTopic> topics) throws Exception {
-        for(int i =1; i<=10; i++){
+    @Given("I prepare {int} messages with the following details and remember the list as TestMessages1...n")
+    public void prepareThousandListOfMessagesWithDifferentTopics(int number, List<CucTopic> topics) throws Exception {
+        for(int i =1; i<=number; i++){
             String listKey = "TestMessages";
             listKey+=i;
             System.out.println("Preparing message: "+listKey);
@@ -679,8 +679,8 @@ public class DatastoreSteps extends TestBase {
         stepData.put(idListKey, tmpIdList);
     }
 
-    @Given("I store the messages from list TestMessages1..n and remember the IDs as StoredMessageIDs1..n")
-    public void insertRandomMessagesIntoDatastore() throws KapuaException {
+    @Given("I store those {int} messages from list TestMessages1..n and remember the IDs as StoredMessageIDs1..n")
+    public void insertRandomMessagesIntoDatastore(int number) throws KapuaException {
         for(int i=1; i<=10; i++){
             String msgListKey = "TestMessages"+i;
             String idListKey = "StoredMessageIDs"+i;
@@ -723,9 +723,9 @@ public class DatastoreSteps extends TestBase {
         messageStoreService.delete(account.getId(), msgId);
     }
 
-    @When("I delete the datastore message with ID SelectedMessageId1..n")
-    public void deleteDatastoreMessages() throws KapuaException {
-        for(int i=1; i<=10; i++){
+    @When("I delete the datastore message with ID SelectedMessageId1..{int}")
+    public void deleteDatastoreMessages(int number) throws KapuaException {
+        for(int i=1; i<=number; i++){
             String idKey = "SelectedMessageId"+i;
             deleteDatastoreMessage(idKey);
         }
@@ -738,9 +738,9 @@ public class DatastoreSteps extends TestBase {
         stepData.put(idKey, tmpId);
     }
 
-    @When("I pick the ID number {int} from the list StoredMessageIDs1..n and remember it as SelectedMessageId1..n")
-    public void pickAMessageIdFromAllList(int index) {
-        for(int i=1; i<=10; i++){
+    @When("I pick the ID number {int} from the list StoredMessageIDs1..{int} and remember it as SelectedMessageId1..n")
+    public void pickAMessageIdFromAllList(int index, int number) {
+        for(int i=1; i<=number; i++){
             String lstKey = "StoredMessageIDs"+i;
             String idKey = "SelectedMessageId"+i;
             pickAMessageIdFromAList(index, lstKey, idKey);
