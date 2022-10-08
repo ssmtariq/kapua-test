@@ -495,7 +495,6 @@ public class DatastoreSteps extends TestBase {
         for(int i =1; i<=number; i++){
             String listKey = "TestMessages";
             listKey+=i;
-            System.out.println("Preparing message: "+listKey);
             prepareAListOfMessagesWithDifferentTopics(listKey, topics);
         }
     }
@@ -717,7 +716,6 @@ public class DatastoreSteps extends TestBase {
 
     @When("I delete the datastore message with ID {string}")
     public void deleteDatastoreMessage(String idKey) throws KapuaException {
-        System.out.println("The idKey to delete message is: "+idKey);
         Account account = (Account) stepData.get(LAST_ACCOUNT);
         StorableId msgId = (StorableId) stepData.get(idKey);
         messageStoreService.delete(account.getId(), msgId);
@@ -725,10 +723,15 @@ public class DatastoreSteps extends TestBase {
 
     @When("I delete the datastore message with ID SelectedMessageId1..{int}")
     public void deleteDatastoreMessages(int number) throws KapuaException {
+        Long latency = new Long(0);
         for(int i=1; i<=number; i++){
             String idKey = "SelectedMessageId"+i;
+            Long startTime = System.currentTimeMillis();
             deleteDatastoreMessage(idKey);
+            Long duration = (System.currentTimeMillis()-startTime);
+            latency += duration;
         }
+        System.out.println("###################### Average Latency of "+number+" DELETE operation is: "+(latency/number)+" #######################");
     }
 
     @When("I pick the ID number {int} from the list {string} and remember it as {string}")
