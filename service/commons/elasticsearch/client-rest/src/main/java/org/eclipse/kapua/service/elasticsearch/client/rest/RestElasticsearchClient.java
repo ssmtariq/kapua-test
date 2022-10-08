@@ -246,6 +246,7 @@ public class RestElasticsearchClient extends AbstractElasticsearchClient<RestCli
         return result.getResult().isEmpty() ? null : result.getResult().get(0);
     }
 
+    @Override
     public Object findTimestamp(String field, TypeDescriptor typeDescriptor, Object query) throws ClientException {
         return queryField(field, typeDescriptor, query);
     }
@@ -256,9 +257,6 @@ public class RestElasticsearchClient extends AbstractElasticsearchClient<RestCli
         LOG.debug(QUERY_CONVERTED_QUERY, queryJsonNode);
 
         String json = writeRequestFromJsonNode(queryJsonNode);
-        System.out.println("### The final query as string RestElasticsearchClient.query() : "+json);
-        System.out.println("### The index is RestElasticsearchClient.query() : "+typeDescriptor.getIndex());
-        System.out.println("### The Request Endpoint: "+ElasticsearchResourcePaths.search(typeDescriptor));
 
         long totalCount = 0;
         ArrayNode resultsNode = null;
@@ -305,28 +303,20 @@ public class RestElasticsearchClient extends AbstractElasticsearchClient<RestCli
         LOG.debug(QUERY_CONVERTED_QUERY, queryJsonNode);
 
         String json = writeRequestFromJsonNode(queryJsonNode);
-        System.out.println("### The final query as string RestElasticsearchClient.query() : "+json);
-        System.out.println("### The index is RestElasticsearchClient.query() : "+typeDescriptor.getIndex());
-        System.out.println("### The Request Endpoint: "+ElasticsearchResourcePaths.search(typeDescriptor));
 
         String includeQuery=String.format("includes\":[\"%s\"]",field);
         String queryToBeReplaced = "includes\":[\"*\"]";
 
         json = json.replace(queryToBeReplaced,includeQuery);
-        System.out.println("### The MODIFIED query as string RestElasticsearchClient.query() : "+json);
 
         long totalCount = 0;
         ArrayNode resultsNode = null;
         Request request = new Request(ElasticsearchKeywords.ACTION_GET, ElasticsearchResourcePaths.search(typeDescriptor));
         request.setJsonEntity(json);
         Response queryResponse = restCallTimeoutHandler(() -> getClient().performRequest(request), typeDescriptor.getIndex(), "QUERY");
-        System.out.println("RAW RESPONSE: "+queryResponse.toString());
 
         if (isRequestSuccessful(queryResponse)) {
             JsonNode responseNode = readResponseAsJsonNode(queryResponse);
-            System.out.println("Response As JsonNode: "+responseNode.textValue());
-            System.out.println("Response As JsonNode: "+responseNode);
-            System.out.println("Response As JsonNode: "+responseNode.asText());
 
             JsonNode hitsNode = responseNode.path(ElasticsearchKeywords.KEY_HITS);
             totalCount = hitsNode.path(ElasticsearchKeywords.KEY_TOTAL).path(ElasticsearchKeywords.KEY_VALUE).asLong();
@@ -341,10 +331,7 @@ public class RestElasticsearchClient extends AbstractElasticsearchClient<RestCli
 
         Map<String, Object> object = null;
         if (resultsNode != null && !resultsNode.isEmpty()) {
-            int counter=1;
             for (JsonNode result : resultsNode) {
-                System.out.println("Result in loop - "+counter+" : "+result.textValue());
-                System.out.println("Result in loop - "+counter+" : "+result);
                 object = objectMapper.convertValue(result.get(SchemaKeys.KEY_SOURCE), Map.class);
             }
         }

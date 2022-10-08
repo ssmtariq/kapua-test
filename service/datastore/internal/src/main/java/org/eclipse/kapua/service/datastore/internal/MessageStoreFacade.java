@@ -13,7 +13,6 @@
 package org.eclipse.kapua.service.datastore.internal;
 
 import com.codahale.metrics.Counter;
-import org.apache.http.HttpHost;
 import org.eclipse.kapua.KapuaException;
 import org.eclipse.kapua.KapuaIllegalArgumentException;
 import org.eclipse.kapua.commons.cache.LocalCache;
@@ -67,18 +66,9 @@ import org.eclipse.kapua.service.storable.model.id.StorableIdFactory;
 import org.eclipse.kapua.service.storable.model.query.StorableFetchStyle;
 import org.eclipse.kapua.service.storable.model.query.predicate.IdsPredicate;
 import org.eclipse.kapua.service.storable.model.query.predicate.StorablePredicateFactory;
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.action.search.SearchType;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestClient;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.Map;
@@ -231,7 +221,23 @@ public final class MessageStoreFacade extends AbstractRegistryFacade {
             return;
         }
 
-        // get the index by finding the object by id
+        //ORIGINAL CODE
+//        DatastoreMessage messageToBeDeleted = find(scopeId, id, StorableFetchStyle.FIELDS);
+//        if (messageToBeDeleted != null) {
+//            Metadata schemaMetadata = null;
+//            try {
+//                schemaMetadata = mediator.getMetadata(scopeId, messageToBeDeleted.getTimestamp().getTime());
+//            } catch (KapuaException e) {
+//                LOG.warn("Retrieving metadata error", e);
+//            }
+//            String indexName = schemaMetadata.getDataIndexName();
+//            TypeDescriptor typeDescriptor = new TypeDescriptor(indexName, MessageSchema.MESSAGE_TYPE_NAME);
+//            getElasticsearchClient().delete(typeDescriptor, id.toString());
+//        } else {
+//            LOG.warn("Cannot find the message to be deleted. scopeId: '{}' - id: '{}'", scopeId, id);
+//        }
+
+        //MODIFIED CODE
         Date timestamp = findModified(scopeId, id, StorableFetchStyle.FIELDS);
         if (timestamp != null) {
             Metadata schemaMetadata = null;
@@ -279,11 +285,17 @@ public final class MessageStoreFacade extends AbstractRegistryFacade {
         return getElasticsearchClient().find(typeDescriptor, idsQuery, DatastoreMessage.class);
     }
 
+    /**
+     * Find Timestamp
+     * @param scopeId
+     * @param id
+     * @param fetchStyle
+     * @return
+     * @throws KapuaIllegalArgumentException
+     * @throws ClientException
+     */
     public Date findModified(KapuaId scopeId, StorableId id, StorableFetchStyle fetchStyle)
             throws KapuaIllegalArgumentException, ClientException {
-
-        System.out.println("Query Param SCOPE_ID="+scopeId.getId());
-        System.out.println("Query Param ID="+id.toString());
 
         ArgumentValidator.notNull(scopeId, SCOPE_ID);
         ArgumentValidator.notNull(id, "id");
@@ -299,7 +311,6 @@ public final class MessageStoreFacade extends AbstractRegistryFacade {
         String indexName = SchemaUtil.getDataIndexName(scopeId);
         TypeDescriptor typeDescriptor = new TypeDescriptor(indexName, MessageSchema.MESSAGE_TYPE_NAME);
         String timestamp = (String) getElasticsearchClient().findTimestamp("timestamp", typeDescriptor, idsQuery);
-        System.out.println("TIMESTAMP FOUND: "+timestamp);
         Date date;
         try {
             date = KapuaDateUtils.parseDate(timestamp);
@@ -307,32 +318,6 @@ public final class MessageStoreFacade extends AbstractRegistryFacade {
             throw new RuntimeException(e);
         }
         return date;
-    }
-
-    public Date findTimestamp(KapuaId scopeId, StorableId id, StorableFetchStyle fetchStyle)
-            throws KapuaIllegalArgumentException, ClientException {
-        String indexName = SchemaUtil.getDataIndexName(scopeId);
-        RestHighLevelClient esClient = new RestHighLevelClient(
-                RestClient.builder(new HttpHost("localhost", 9200, "http")));
-
-        //Prepare search request
-        SearchRequest searchRequest = new SearchRequest();
-        searchRequest.searchType(SearchType.DFS_QUERY_THEN_FETCH);
-        searchRequest.indices(indexName);
-
-        /* Set elasticsearch query for the request */
-        SearchSourceBuilder builder = new SearchSourceBuilder()
-                .postFilter(QueryBuilders.rangeQuery("age").from(5).to(15));
-
-        searchRequest.source(builder);
-
-        // Query elastic search
-        try {
-            SearchResponse searchResponse = esClient.search(searchRequest, RequestOptions.DEFAULT);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return null;
     }
 
     /**
