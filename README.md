@@ -20,6 +20,8 @@
 
 [Eclipse Kapua&trade;](http://eclipse.org/kapua) is a modular platform providing the services required to manage IoT gateways and smart edge devices. Kapua provides a core integration framework and an initial set of core IoT services including a device registry, device management services, messaging services, data management, and application enablement.
 
+## Quick Deployment Guide
+https://docs.google.com/document/d/1Wv-XY84-NX2wsSD8CU-8xe0rH7Ynd424Ei3M6uU0aCw/edit?usp=sharing
 
 ## Quick Start Guide
 
