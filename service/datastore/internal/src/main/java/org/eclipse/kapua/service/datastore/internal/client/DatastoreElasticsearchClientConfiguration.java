@@ -38,7 +38,11 @@ public class DatastoreElasticsearchClientConfiguration extends ElasticsearchClie
         List<String> nodesSplitted = ELASTICSEARCH_CLIENT_SETTINGS.getList(String.class, DatastoreElasticsearchClientSettingsKey.NODES);
         for (String node : nodesSplitted) {
             String[] nodeSplitted = node.split(":");
-            addNode(nodeSplitted[0], nodeSplitted.length == 2 ? Integer.parseInt(nodeSplitted[1]) : 9200);
+            /* For using local database*/
+//            addNode(nodeSplitted[0], nodeSplitted.length == 2 ? Integer.parseInt(nodeSplitted[1]) : 9200);
+
+            /* To use remote DB, enable the following line, disable the above one and replace 128.110.217.131 with remote host*/
+             addNode("128.110.217.78", nodeSplitted.length == 2 ? Integer.parseInt(nodeSplitted[1]) : 9200);
         }
 
         //

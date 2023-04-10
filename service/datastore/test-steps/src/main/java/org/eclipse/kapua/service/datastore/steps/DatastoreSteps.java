@@ -723,15 +723,16 @@ public class DatastoreSteps extends TestBase {
 
     @When("I delete the datastore message with ID SelectedMessageId1..{int}")
     public void deleteDatastoreMessages(int number) throws KapuaException {
-        Long latency = new Long(0);
+        Long sumOfLatencies = new Long(0);
         for(int i=1; i<=number; i++){
             String idKey = "SelectedMessageId"+i;
             Long startTime = System.currentTimeMillis();
             deleteDatastoreMessage(idKey);
-            Long duration = (System.currentTimeMillis()-startTime);
-            latency += duration;
+            Long latency = (System.currentTimeMillis()-startTime);
+            System.out.println(latency+" ms");
+            sumOfLatencies += latency;
         }
-        System.out.println("###################### Average Latency of "+number+" DELETE operation is: "+(latency/number)+" #######################");
+        System.out.println("###################### Average Latency of "+number+" DELETE operation is: "+(sumOfLatencies/number)+" ms #######################");
     }
 
     @When("I pick the ID number {int} from the list {string} and remember it as {string}")

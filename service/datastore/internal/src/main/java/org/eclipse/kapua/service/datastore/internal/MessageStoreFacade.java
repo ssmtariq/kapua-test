@@ -222,27 +222,11 @@ public final class MessageStoreFacade extends AbstractRegistryFacade {
         }
 
         //ORIGINAL CODE
-//        DatastoreMessage messageToBeDeleted = find(scopeId, id, StorableFetchStyle.FIELDS);
-//        if (messageToBeDeleted != null) {
-//            Metadata schemaMetadata = null;
-//            try {
-//                schemaMetadata = mediator.getMetadata(scopeId, messageToBeDeleted.getTimestamp().getTime());
-//            } catch (KapuaException e) {
-//                LOG.warn("Retrieving metadata error", e);
-//            }
-//            String indexName = schemaMetadata.getDataIndexName();
-//            TypeDescriptor typeDescriptor = new TypeDescriptor(indexName, MessageSchema.MESSAGE_TYPE_NAME);
-//            getElasticsearchClient().delete(typeDescriptor, id.toString());
-//        } else {
-//            LOG.warn("Cannot find the message to be deleted. scopeId: '{}' - id: '{}'", scopeId, id);
-//        }
-
-        //MODIFIED CODE
-        Date timestamp = findModified(scopeId, id, StorableFetchStyle.FIELDS);
-        if (timestamp != null) {
+        DatastoreMessage messageToBeDeleted = find(scopeId, id, StorableFetchStyle.FIELDS);
+        if (messageToBeDeleted != null) {
             Metadata schemaMetadata = null;
             try {
-                schemaMetadata = mediator.getMetadata(scopeId, timestamp.getTime());
+                schemaMetadata = mediator.getMetadata(scopeId, messageToBeDeleted.getTimestamp().getTime());
             } catch (KapuaException e) {
                 LOG.warn("Retrieving metadata error", e);
             }
@@ -252,6 +236,22 @@ public final class MessageStoreFacade extends AbstractRegistryFacade {
         } else {
             LOG.warn("Cannot find the message to be deleted. scopeId: '{}' - id: '{}'", scopeId, id);
         }
+
+        //MODIFIED CODE
+//        Date timestamp = findModified(scopeId, id, StorableFetchStyle.FIELDS);
+//        if (timestamp != null) {
+//            Metadata schemaMetadata = null;
+//            try {
+//                schemaMetadata = mediator.getMetadata(scopeId, timestamp.getTime());
+//            } catch (KapuaException e) {
+//                LOG.warn("Retrieving metadata error", e);
+//            }
+//            String indexName = schemaMetadata.getDataIndexName();
+//            TypeDescriptor typeDescriptor = new TypeDescriptor(indexName, MessageSchema.MESSAGE_TYPE_NAME);
+//            getElasticsearchClient().delete(typeDescriptor, id.toString());
+//        } else {
+//            LOG.warn("Cannot find the message to be deleted. scopeId: '{}' - id: '{}'", scopeId, id);
+//        }
         // otherwise no message to be deleted found
     }
 
