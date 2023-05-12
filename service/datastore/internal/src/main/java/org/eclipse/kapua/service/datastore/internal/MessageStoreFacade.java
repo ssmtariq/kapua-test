@@ -222,36 +222,20 @@ public final class MessageStoreFacade extends AbstractRegistryFacade {
         }
 
         //ORIGINAL CODE
-        // DatastoreMessage messageToBeDeleted = find(scopeId, id, StorableFetchStyle.FIELDS);
-        // if (messageToBeDeleted != null) {
-        //     Metadata schemaMetadata = null;
-        //     try {
-        //         schemaMetadata = mediator.getMetadata(scopeId, messageToBeDeleted.getTimestamp().getTime());
-        //     } catch (KapuaException e) {
-        //         LOG.warn("Retrieving metadata error", e);
-        //     }
-        //     String indexName = schemaMetadata.getDataIndexName();
-        //     TypeDescriptor typeDescriptor = new TypeDescriptor(indexName, MessageSchema.MESSAGE_TYPE_NAME);
-        //     getElasticsearchClient().delete(typeDescriptor, id.toString());
-        // } else {
-        //     LOG.warn("Cannot find the message to be deleted. scopeId: '{}' - id: '{}'", scopeId, id);
-        // }
-
-        //MODIFIED CODE
-       Date timestamp = findModified(scopeId, id, StorableFetchStyle.FIELDS);
-       if (timestamp != null) {
-           Metadata schemaMetadata = null;
-           try {
-               schemaMetadata = mediator.getMetadata(scopeId, timestamp.getTime());
-           } catch (KapuaException e) {
-               LOG.warn("Retrieving metadata error", e);
-           }
-           String indexName = schemaMetadata.getDataIndexName();
-           TypeDescriptor typeDescriptor = new TypeDescriptor(indexName, MessageSchema.MESSAGE_TYPE_NAME);
-           getElasticsearchClient().delete(typeDescriptor, id.toString());
-       } else {
-           LOG.warn("Cannot find the message to be deleted. scopeId: '{}' - id: '{}'", scopeId, id);
-       }
+         DatastoreMessage messageToBeDeleted = find(scopeId, id, StorableFetchStyle.FIELDS);
+         if (messageToBeDeleted != null) {
+             Metadata schemaMetadata = null;
+             try {
+                 schemaMetadata = mediator.getMetadata(scopeId, messageToBeDeleted.getTimestamp().getTime());
+             } catch (KapuaException e) {
+                 LOG.warn("Retrieving metadata error", e);
+             }
+             String indexName = schemaMetadata.getDataIndexName();
+             TypeDescriptor typeDescriptor = new TypeDescriptor(indexName, MessageSchema.MESSAGE_TYPE_NAME);
+             getElasticsearchClient().delete(typeDescriptor, id.toString());
+         } else {
+             LOG.warn("Cannot find the message to be deleted. scopeId: '{}' - id: '{}'", scopeId, id);
+         }
         // otherwise no message to be deleted found
     }
 
@@ -283,41 +267,6 @@ public final class MessageStoreFacade extends AbstractRegistryFacade {
         String indexName = SchemaUtil.getDataIndexName(scopeId);
         TypeDescriptor typeDescriptor = new TypeDescriptor(indexName, MessageSchema.MESSAGE_TYPE_NAME);
         return getElasticsearchClient().find(typeDescriptor, idsQuery, DatastoreMessage.class);
-    }
-
-    /**
-     * Find Timestamp
-     * @param scopeId
-     * @param id
-     * @param fetchStyle
-     * @return
-     * @throws KapuaIllegalArgumentException
-     * @throws ClientException
-     */
-    public Date findModified(KapuaId scopeId, StorableId id, StorableFetchStyle fetchStyle)
-            throws KapuaIllegalArgumentException, ClientException {
-
-        ArgumentValidator.notNull(scopeId, SCOPE_ID);
-        ArgumentValidator.notNull(id, "id");
-        ArgumentValidator.notNull(fetchStyle, "fetchStyle");
-
-        MessageQueryImpl idsQuery = new MessageQueryImpl(scopeId);
-        idsQuery.setLimit(1);
-
-        IdsPredicate idsPredicate = STORABLE_PREDICATE_FACTORY.newIdsPredicate(MessageSchema.MESSAGE_TYPE_NAME);
-        idsPredicate.addId(id);
-        idsQuery.setPredicate(idsPredicate);
-
-        String indexName = SchemaUtil.getDataIndexName(scopeId);
-        TypeDescriptor typeDescriptor = new TypeDescriptor(indexName, MessageSchema.MESSAGE_TYPE_NAME);
-        String timestamp = (String) getElasticsearchClient().findTimestamp("timestamp", typeDescriptor, idsQuery);
-        Date date;
-        try {
-            date = KapuaDateUtils.parseDate(timestamp);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-        return date;
     }
 
     /**
